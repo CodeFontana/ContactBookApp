@@ -1,5 +1,7 @@
 ﻿using ContactBook.Services;
 using ContactBook.ViewModels;
+using DataAccessLibrary;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,10 +33,10 @@ public partial class App : Application
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    //services.AddDbContext<NotesDbContext>(options =>
-                    //{
-                    //    options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Notes.db;");
-                    //});
+                    services.AddDbContext<ContactDbContext>(options =>
+                    {
+                        options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Contacts.db;");
+                    });
                     services.AddScoped<IContactDataService, MockDataService>();
                     services.AddScoped<IDialogService, WindowDialogService>();
                     services.AddScoped<MainViewModel>();
