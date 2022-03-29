@@ -94,6 +94,7 @@
             <Setter Property="MinWidth" Value="120"/>
             <Setter Property="MinHeight" Value="20"/>
             <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <!-- What are control templates? Visit: https://dzone.com/articles/control-templates-wpf -->
