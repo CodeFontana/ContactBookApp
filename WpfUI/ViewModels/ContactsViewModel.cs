@@ -8,6 +8,7 @@ using System.Windows.Input;
 using WpfUI.Models;
 using DataAccessLibrary.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 
 namespace WpfUI.ViewModels;
 
@@ -23,6 +24,9 @@ public class ContactsViewModel : ObservableObject
         _dialogService = dialogService;
         CreateContactCommand = new RelayCommand(CreateContact);
         EditContactCommand = new RelayCommand(EditContact, CanEdit);
+        AddPhoneNumber = new RelayCommand(AddContactPhone, IsEdit);
+        AddEmailAddress = new RelayCommand(AddContactEmail, IsEdit);
+        AddPhysicalAddress = new RelayCommand(AddContactAddress, IsEdit);
         UpdateContactCommand = new RelayCommand(UpdateContact, IsEdit);
         UpdateContactImageCommand = new RelayCommand(UpdateContactImage, IsEdit);
         FavoriteContactCommand = new RelayCommand(FavoriteContact);
@@ -65,6 +69,9 @@ public class ContactsViewModel : ObservableObject
     }
 
     public ICommand EditContactCommand { get; private set; }
+    public ICommand AddPhoneNumber { get; private set; }
+    public ICommand AddEmailAddress { get; private set; }
+    public ICommand AddPhysicalAddress { get; private set; }
     public ICommand UpdateContactCommand { get; private set; }
     public ICommand FavoriteContactCommand { get; private set; }
     public ICommand UpdateContactImageCommand { get; private set; }
@@ -138,6 +145,19 @@ public class ContactsViewModel : ObservableObject
 
         IsEditMode = false;
         OnPropertyChanged(nameof(SelectedContact));
+    }
+    private void AddContactPhone()
+    {
+        SelectedContact.PhoneNumbers.Add(new Phone());
+    }
+    private void AddContactEmail()
+    {
+        SelectedContact.EmailAddresses.Add(new Email());
+    }
+
+    private void AddContactAddress()
+    {
+        SelectedContact.Addresses.Add(new Address());
     }
 
     private void UpdateContactImage()

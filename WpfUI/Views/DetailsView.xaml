@@ -98,79 +98,116 @@
         </Grid>
         
          <!--Phone Numbers--> 
-        <StackPanel Grid.Row="1"
-                    Margin="5">
-            <StackPanel>
-                <Border Style="{StaticResource DetailBorder}">
+        <StackPanel Grid.Row="1" Margin="5">
+            <Border Grid.Row="0" Style="{StaticResource DetailBorder}">
+                <DockPanel>
                     <Label FontWeight="Bold" 
-                           Foreground="#FFF5F7F9"
-                           Content="Phone Numbers" />
-                </Border>
-                <StackPanel>
-                    <ListView ItemsSource="{Binding SelectedContact.PhoneNumbers}">
+                               Foreground="#FFF5F7F9"
+                               Content="Phone Numbers" />
+                    <Button Command="{Binding AddPhoneNumber}"
+                                Margin="10 0 10 0"
+                                Height="20"
+                                Width="20"
+                                HorizontalAlignment="Right"
+                                Background="Transparent">
+                        <Button.Content>
+                            <Image Source="/Resources/plus.png" />
+                        </Button.Content>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <Grid Grid.Row="1">
+                <Grid>
+                    <ListView ItemsSource="{Binding SelectedContact.PhoneNumbers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel>
+                                <Grid HorizontalAlignment="Stretch">
                                     <Label Style="{StaticResource ContentLabel}" 
-                                           Content="{Binding}"
-                                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                    <TextBox Text="{Binding}"
+                                           Content="{Binding PhoneNumber}"
+                                           Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    <TextBox Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Style="{StaticResource EditBox}"
-                                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                </StackPanel>
+                                             Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                                             HorizontalContentAlignment="Stretch"/>
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </StackPanel>
-            </StackPanel>
+                </Grid>
+            </Grid>
         </StackPanel>
 
          <!--Email Addresses--> 
         <StackPanel Grid.Row="2"
                     Margin="5">
-            <StackPanel>
-                <Border Style="{StaticResource DetailBorder}">
+            <Border Style="{StaticResource DetailBorder}">
+                <DockPanel>
                     <Label FontWeight="Bold" 
-                           Foreground="#FFF5F7F9"
-                           Content="Email Addresses" />
-                </Border>
-                <ListView ItemsSource="{Binding SelectedContact.EmailAddresses}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label Style="{StaticResource ContentLabel}" 
-                                       Content="{Binding}"
-                                       Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                <TextBox Text="{Binding}"
+                               Foreground="#FFF5F7F9"
+                               Content="Email Addresses" />
+                    <Button Command="{Binding AddEmailAddress}"
+                                Margin="10 0 10 0"
+                                Height="20"
+                                Width="20"
+                                HorizontalAlignment="Right"
+                                Background="Transparent">
+                        <Button.Content>
+                            <Image Source="/Resources/plus.png" />
+                        </Button.Content>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <ListView ItemsSource="{Binding SelectedContact.EmailAddresses}"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Label Style="{StaticResource ContentLabel}" 
+                                       Content="{Binding EmailAddress}"
+                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Text="{Binding EmailAddress}"
                                          Style="{StaticResource EditBox}"
-                                         Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
+                                         Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
 
          <!--Physical Addresses--> 
-        <StackPanel Grid.Row="3"
-                    Margin="5">
+        <StackPanel Grid.Row="3" Margin="5">
             <StackPanel>
                 <Border Style="{StaticResource DetailBorder}">
-                    <Label FontWeight="Bold" 
-                           Foreground="#FFF5F7F9"
-                           Content="Addresses" />
+                    <DockPanel>
+                        <Label FontWeight="Bold" 
+                               Foreground="#FFF5F7F9"
+                               Content="Physical Addresses" />
+                        <Button Command="{Binding AddPhysicalAddress}"
+                                Margin="10 0 10 0"
+                                Height="20"
+                                Width="20"
+                                HorizontalAlignment="Right"
+                                Background="Transparent">
+                            <Button.Content>
+                                <Image Source="/Resources/plus.png" />
+                            </Button.Content>
+                        </Button>
+                    </DockPanel>
                 </Border>
                 <ListView ItemsSource="{Binding SelectedContact.Addresses}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
+                            <Grid>
                                 <Label Style="{StaticResource ContentLabel}" 
                                        Content="{Binding}"
-                                       Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 <TextBox Text="{Binding}"
                                          Style="{StaticResource EditBox}"
-                                         Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            </StackPanel>
+                                         Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
