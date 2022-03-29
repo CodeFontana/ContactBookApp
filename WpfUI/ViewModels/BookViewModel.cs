@@ -1,5 +1,7 @@
 ﻿using ContactBook.Services;
 using ContactBook.Utilities;
+using DataAccessLibrary;
+using DataAccessLibrary.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -7,16 +9,16 @@ using System.Windows.Input;
 namespace ContactBook.ViewModels;
 public class BookViewModel : ObservableObject
 {
-    private readonly IContactDataService _dataService;
+    private readonly ContactDbContextFactory _dbContext;
     private readonly IDialogService _dialogService;
 
-    public BookViewModel(IContactDataService dataService, 
+    public BookViewModel(ContactDbContextFactory dbContext, 
                          IDialogService dialogService)
     {
-        ContactsVM = new ContactsViewModel(dataService, dialogService);
+        ContactsVM = new ContactsViewModel(dbContext, dialogService);
         LoadContactsCommand = new RelayCommand(LoadContacts);
         LoadFavoritesCommand = new RelayCommand(LoadFavorites);
-        _dataService = dataService;
+        _dbContext = dbContext;
         _dialogService = dialogService;
         LoadContacts();
     }
@@ -39,12 +41,14 @@ public class BookViewModel : ObservableObject
 
     private void LoadContacts()
     {
-        ContactsVM.LoadContacts(_dataService.GetContacts());
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        ContactsVM.LoadContacts(db.Contacts.ToList());
     }
 
     private void LoadFavorites()
     {
-        IEnumerable<Models.Contact> favorites = _dataService.GetContacts().Where(c => c.IsFavorite);
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        IEnumerable<Person> favorites = db.Contacts.Where(c => c.IsFavorite).ToList();
         ContactsVM.LoadContacts(favorites);
     }
 }

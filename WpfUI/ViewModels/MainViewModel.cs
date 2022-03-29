@@ -1,5 +1,6 @@
 ﻿using ContactBook.Services;
 using ContactBook.Utilities;
+using DataAccessLibrary;
 
 namespace ContactBook.ViewModels;
 
@@ -10,9 +11,10 @@ public class MainViewModel : ObservableObject
         // For design mode
     }
 
-    public MainViewModel(IContactDataService dataService, IDialogService dialogService)
+    public MainViewModel(ContactDbContextFactory dbContext, 
+                         IDialogService dialogService)
     {
-        BookVM = new BookViewModel(dataService, dialogService);
+        BookVM = new BookViewModel(dbContext, dialogService);
         CurrentViewModel = BookVM;
 
     }

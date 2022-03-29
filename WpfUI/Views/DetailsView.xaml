@@ -4,15 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ContactBook.Views" 
-             xmlns:viewmodels="clr-namespace:ContactBook.ViewModels" 
-             d:DataContext="{d:DesignInstance Type=viewmodels:ContactsViewModel}"
+             xmlns:vm="clr-namespace:ContactBook.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=vm:ContactsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="450">
     
     <Grid Visibility="{Binding SelectedContact, Converter={StaticResource NullToVisibilityConverter}}">
         
         <Grid.RowDefinitions>
-            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
@@ -31,36 +30,38 @@
                         Margin="5">
 
                 <StackPanel Orientation="Horizontal">
-
                     <StackPanel HorizontalAlignment="Center">
-
-                        <TextBox Text="{Binding SelectedContact.Name, FallbackValue=NULL, Mode=TwoWay}"
+                        <TextBox Text="{Binding SelectedContact.LastName, FallbackValue=Lastname, Mode=TwoWay}"
                                  Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
                                  VerticalContentAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 Margin="5" />
-
-                        <Label Content="{Binding SelectedContact.Name, FallbackValue=N/A}"
+                                 HorizontalAlignment="Left"
+                                 Margin="5"
+                                 FontSize="24"
+                                 MinWidth="250"/>
+                        <TextBox Text="{Binding SelectedContact.FirstName, FallbackValue=Firstname, Mode=TwoWay}"
+                                 Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalAlignment="Left"
+                                 Margin="5"
+                                 FontSize="20"
+                                 MinWidth="250"/>
+                        <Label Content="{Binding SelectedContact.FullName, FallbackValue=Alan Turing}"
                                Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"
                                HorizontalAlignment="Center"
                                FontSize="24" />
-
                     </StackPanel>
 
                     <CheckBox Style="{StaticResource favoriteCheckbox}"
                               IsChecked="{Binding SelectedContact.IsFavorite}"
-                              Command="{Binding UpdateCommand}"/>
-
+                              Command="{Binding FavoriteContactCommand}"/>
                 </StackPanel>
 
                 <Grid Height="125" 
                       Width="125">
-
                     <Image Height="125" 
                            Width="125"
                            Source="{Binding SelectedContact.ImagePath, FallbackValue={StaticResource DefaultContactImage}, TargetNullValue={StaticResource DefaultContactImage}}" />
-
-                    <Button Command="{Binding BrowseImageCommand}"
+                    <Button Command="{Binding UpdateContactImageCommand}"
                             Style="{StaticResource MenuIconButton}"
                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
                             Background="{StaticResource GloomyPurple}"
@@ -70,7 +71,6 @@
                             FontWeight="DemiBold">
                         Browse
                     </Button>
-
                 </Grid>
                 
             </StackPanel>
@@ -78,176 +78,98 @@
             <StackPanel Grid.Column="1"
                         VerticalAlignment="Bottom"
                         Orientation="Horizontal">
-
-                <Button Command="{Binding SaveCommand}"
+                <Button Command="{Binding UpdateContactCommand}"
                         Style="{StaticResource MenuIconButton}"
                         Background="{StaticResource MaximumBlueGreen}"
                         Width="90"
                         Height="40"
                         Margin="5">
                     <Button.Content>
-                        
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/saveIcon.png" />
                             <Label FontWeight="Bold">Save</Label>
                         </StackPanel>
-                        
                     </Button.Content>
                 </Button>
-                
             </StackPanel>
             
         </Grid>
         
-        <!-- Phone -->
+         <!--Phone Numbers--> 
         <StackPanel Grid.Row="1"
                     Margin="5">
-
             <StackPanel>
-
                 <Border Style="{StaticResource DetailBorder}">
                     <Label FontWeight="Bold" 
                            Foreground="#FFF5F7F9"
-                           Content="Phone" />
+                           Content="Phone Numbers" />
                 </Border>
-
                 <StackPanel>
-
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Home" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.PhoneNumbers[0], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.PhoneNumbers[0], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Cell" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.PhoneNumbers[1], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.PhoneNumbers[1], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Work" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.PhoneNumbers[2], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.PhoneNumbers[2], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Other" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.PhoneNumbers[3], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.PhoneNumbers[3], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-
+                    <ListView ItemsSource="{Binding SelectedContact.PhoneNumbers}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Label Style="{StaticResource ContentLabel}" 
+                                           Content="{Binding}"
+                                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    <TextBox Text="{Binding}"
+                                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
-                
             </StackPanel>
-            
         </StackPanel>
 
-        <!-- Email -->
+         <!--Email Addresses--> 
         <StackPanel Grid.Row="2"
                     Margin="5">
-
             <StackPanel>
-
                 <Border Style="{StaticResource DetailBorder}">
                     <Label FontWeight="Bold" 
                            Foreground="#FFF5F7F9"
-                           Content="Email" />
+                           Content="Email Addresses" />
                 </Border>
-
-                <StackPanel>
-
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Home" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.Emails[0], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.Emails[0], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Work" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.Emails[1], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.Emails[1], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Other" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.Emails[2], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.Emails[2], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    
-                </StackPanel>
-
+                <ListView ItemsSource="{Binding SelectedContact.EmailAddresses}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Label Style="{StaticResource ContentLabel}" 
+                                       Content="{Binding}"
+                                       Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <TextBox Text="{Binding}"
+                                         Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
-
         </StackPanel>
 
-        <!-- Locations -->
+         <!--Physical Addresses--> 
         <StackPanel Grid.Row="3"
                     Margin="5">
-
             <StackPanel>
-
                 <Border Style="{StaticResource DetailBorder}">
                     <Label FontWeight="Bold" 
                            Foreground="#FFF5F7F9"
-                           Content="Locations" />
+                           Content="Addresses" />
                 </Border>
-
-                <StackPanel>
-
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Home" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.Locations[0], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.Locations[0], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Work" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.Locations[1], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.Locations[1], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <Label Style="{StaticResource DetailLabel}" 
-                           Content="Other" />
-                    <Label Style="{StaticResource ContentLabel}" 
-                           Content="{Binding SelectedContact.Locations[2], FallbackValue=NULL}"
-                           Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <TextBox Text="{Binding SelectedContact.Locations[2], FallbackValue=N/A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    
-                </StackPanel>
-
+                <ListView ItemsSource="{Binding SelectedContact.Addresses}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Label Style="{StaticResource ContentLabel}" 
+                                       Content="{Binding}"
+                                       Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <TextBox Text="{Binding}"
+                                         Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
-
         </StackPanel>
 
     </Grid>

@@ -33,11 +33,7 @@ public partial class App : Application
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddDbContext<ContactDbContext>(options =>
-                    {
-                        options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Contacts.db;");
-                    });
-                    services.AddScoped<IContactDataService, MockDataService>();
+                    services.AddSingleton(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
                     services.AddScoped<IDialogService, WindowDialogService>();
                     services.AddScoped<MainViewModel>();
                     services.AddScoped(sp => new MainWindow(sp.GetRequiredService<MainViewModel>()));
@@ -60,8 +56,9 @@ public partial class App : Application
     {
         await _appHost.StartAsync();
         using IServiceScope scope = _appHost.Services.CreateScope();
-        //NotesDbContext db = scope.ServiceProvider.GetRequiredService<NotesDbContext>();
-        //db.Database.Migrate();
+        ContactDbContextFactory dbContext = scope.ServiceProvider.GetRequiredService<ContactDbContextFactory>();
+        using ContactDbContext db = dbContext.CreateDbContext();
+        db.Database.Migrate();
         Window mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
         mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         mainWindow.Show();

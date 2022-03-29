@@ -47,14 +47,14 @@
                         HorizontalAlignment="Right">
 
                 <Button Style="{StaticResource MenuIconButton}"
-                        Command="{Binding BookVM.ContactsVM.AddContactCommand}">
+                        Command="{Binding BookVM.ContactsVM.CreateContactCommand}">
                     <Button.Content>
                         <Image Height="30" Width="30" Source="Resources/addIcon.png" />
                     </Button.Content>
                 </Button>
 
                 <Button Style="{StaticResource MenuIconButton}"
-                        Command="{Binding BookVM.ContactsVM.EditCommand}">
+                        Command="{Binding BookVM.ContactsVM.EditContactCommand}">
                     <Button.Content>
                         <Image Height="30" Width="30" Source="Resources/createIcon.png" />
                     </Button.Content>

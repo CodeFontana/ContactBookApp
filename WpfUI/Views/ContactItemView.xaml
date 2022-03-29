@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ContactBook.Views" 
-             xmlns:models="clr-namespace:ContactBook.Models" d:DataContext="{d:DesignInstance Type=models:Contact}"
+             xmlns:e="clr-namespace:DataAccessLibrary.Entities;assembly=DataAccessLibrary" 
+             d:DataContext="{d:DesignInstance Type=e:Person}"
              mc:Ignorable="d" 
              d:DesignHeight="75" d:DesignWidth="250">
     <Grid>
@@ -22,7 +23,7 @@
                     VerticalAlignment="Center">
 
             <Label FontSize="18"
-                   Content="{Binding Name, FallbackValue=N/A}" />
+                   Content="{Binding FullName, FallbackValue=Alan Turing}" />
 
         </StackPanel>
         
