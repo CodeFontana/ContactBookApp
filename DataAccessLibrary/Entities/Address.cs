@@ -17,4 +17,6 @@ public class Address
 
     [MaxLength(50, ErrorMessage = "Zip code must be 10 characters or less")]
     public string ZipCode { get; set; }
+
+    public string FullAddress { get => $"{StreetAddress} {City}, {State}  {ZipCode}"; }
 }
