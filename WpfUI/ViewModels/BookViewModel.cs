@@ -48,6 +48,7 @@ public class BookViewModel : ObservableObject
             .Include(x => x.EmailAddresses)
             .Include(x => x.Addresses)
             .AsSplitQuery()
+            .AsNoTracking()
             .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
         ContactsVM.LoadContacts(contacts);
     }
@@ -61,6 +62,7 @@ public class BookViewModel : ObservableObject
             .Include(x => x.Addresses)
             .AsSplitQuery()
             .Where(c => c.IsFavorite)
+            .AsNoTracking()
             .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
         ContactsVM.LoadContacts(favorites);
     }
