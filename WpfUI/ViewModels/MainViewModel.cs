@@ -1,8 +1,8 @@
-﻿using ContactBook.Services;
-using ContactBook.Utilities;
+﻿using WpfUI.Services;
+using WpfUI.Utilities;
 using DataAccessLibrary;
 
-namespace ContactBook.ViewModels;
+namespace WpfUI.ViewModels;
 
 public class MainViewModel : ObservableObject
 {

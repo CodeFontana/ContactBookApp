@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ContactBook.Utilities;
+namespace WpfUI.Utilities;
 
 public class RelayCommand<T> : ICommand
 {

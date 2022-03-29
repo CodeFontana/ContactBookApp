@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="ContactBook.Views.DetailsView"
+﻿<UserControl x:Class="WpfUI.Views.DetailsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ContactBook.Views" 
-             xmlns:vm="clr-namespace:ContactBook.ViewModels" 
+             xmlns:local="clr-namespace:WpfUI.Views" 
+             xmlns:vm="clr-namespace:WpfUI.ViewModels" 
              d:DataContext="{d:DesignInstance Type=vm:ContactsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="450">
@@ -31,19 +31,21 @@
 
                 <StackPanel Orientation="Horizontal">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBox Text="{Binding SelectedContact.LastName, FallbackValue=Lastname, Mode=TwoWay}"
+                        <TextBox Text="{Binding SelectedContact.LastName, FallbackValue=Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource EditBox}"
+                                 Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalAlignment="Left"
+                                 Margin="5"
+                                 FontSize="28"
+                                 MinWidth="250"/>
+                        <TextBox Text="{Binding SelectedContact.FirstName, FallbackValue=Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource EditBox}"
                                  Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
                                  VerticalContentAlignment="Center"
                                  HorizontalAlignment="Left"
                                  Margin="5"
                                  FontSize="24"
-                                 MinWidth="250"/>
-                        <TextBox Text="{Binding SelectedContact.FirstName, FallbackValue=Firstname, Mode=TwoWay}"
-                                 Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-                                 VerticalContentAlignment="Center"
-                                 HorizontalAlignment="Left"
-                                 Margin="5"
-                                 FontSize="20"
                                  MinWidth="250"/>
                         <Label Content="{Binding SelectedContact.FullName, FallbackValue=Alan Turing}"
                                Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -113,6 +115,7 @@
                                            Content="{Binding}"
                                            Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                     <TextBox Text="{Binding}"
+                                             Style="{StaticResource EditBox}"
                                              Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -139,6 +142,7 @@
                                        Content="{Binding}"
                                        Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 <TextBox Text="{Binding}"
+                                         Style="{StaticResource EditBox}"
                                          Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             </StackPanel>
                         </DataTemplate>
@@ -164,6 +168,7 @@
                                        Content="{Binding}"
                                        Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 <TextBox Text="{Binding}"
+                                         Style="{StaticResource EditBox}"
                                          Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             </StackPanel>
                         </DataTemplate>

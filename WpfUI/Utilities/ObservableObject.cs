@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ContactBook.Utilities;
+namespace WpfUI.Utilities;
 
 public class ObservableObject : INotifyPropertyChanged
 {

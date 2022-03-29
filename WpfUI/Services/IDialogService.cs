@@ -1,4 +1,4 @@
-﻿namespace ContactBook.Services;
+﻿namespace WpfUI.Services;
 
 public interface IDialogService
 {

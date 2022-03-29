@@ -9,11 +9,11 @@ public class Person
 
     [Required]
     [MaxLength(50, ErrorMessage = "First name must be 50 characters or less")]
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = "";
 
     [Required]
     [MaxLength(50, ErrorMessage = "Last name must be 50 characters or less")]
-    public string LastName { get; set; }
+    public string LastName { get; set; } = "";
 
     [NotMapped]
     public string FullName { get => $"{FirstName} {LastName}"; }
@@ -26,5 +26,5 @@ public class Person
 
     public string ImagePath { get; set; }
 
-    public bool IsFavorite { get; set; } = false;
+    public bool IsFavorite { get; set; } = false; 
 }

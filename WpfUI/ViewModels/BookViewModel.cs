@@ -1,12 +1,12 @@
-﻿using ContactBook.Services;
-using ContactBook.Utilities;
+﻿using WpfUI.Services;
+using WpfUI.Utilities;
 using DataAccessLibrary;
-using DataAccessLibrary.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using WpfUI.Models;
 
-namespace ContactBook.ViewModels;
+namespace WpfUI.ViewModels;
 public class BookViewModel : ObservableObject
 {
     private readonly ContactDbContextFactory _dbContext;
@@ -42,13 +42,17 @@ public class BookViewModel : ObservableObject
     private void LoadContacts()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
-        ContactsVM.LoadContacts(db.Contacts.ToList());
+        IEnumerable<PersonModel> contacts = db.Contacts
+            .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
+        ContactsVM.LoadContacts(contacts);
     }
 
     private void LoadFavorites()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
-        IEnumerable<Person> favorites = db.Contacts.Where(c => c.IsFavorite).ToList();
+        IEnumerable<PersonModel> favorites = db.Contacts
+            .Where(c => c.IsFavorite)
+            .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
         ContactsVM.LoadContacts(favorites);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace ContactBook.Services;
+namespace WpfUI.Services;
 
 public class WindowDialogService : IDialogService
 {

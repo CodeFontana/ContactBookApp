@@ -1,7 +1,7 @@
-﻿using ContactBook.ViewModels;
+﻿using WpfUI.ViewModels;
 using System.Windows;
 
-namespace ContactBook;
+namespace WpfUI;
 
 public partial class MainWindow : Window
 {

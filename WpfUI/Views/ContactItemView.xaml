@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="ContactBook.Views.ContactItemView"
+﻿<UserControl x:Class="WpfUI.Views.ContactItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ContactBook.Views" 
-             xmlns:e="clr-namespace:DataAccessLibrary.Entities;assembly=DataAccessLibrary" 
-             d:DataContext="{d:DesignInstance Type=e:Person}"
+             xmlns:local="clr-namespace:WpfUI.Views" 
+             xmlns:m="clr-namespace:WpfUI.Models"
+             d:DataContext="{d:DesignInstance Type=m:PersonModel}"
              mc:Ignorable="d" 
              d:DesignHeight="75" d:DesignWidth="250">
     <Grid>

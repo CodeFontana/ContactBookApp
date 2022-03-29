@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ContactBook.Views;
+namespace WpfUI.Views;
 
 public partial class DetailsView : UserControl
 {

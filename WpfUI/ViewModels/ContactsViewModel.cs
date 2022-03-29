@@ -1,13 +1,15 @@
-﻿using ContactBook.Services;
-using ContactBook.Utilities;
+﻿using WpfUI.Services;
+using WpfUI.Utilities;
 using DataAccessLibrary;
-using DataAccessLibrary.Entities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using WpfUI.Models;
+using DataAccessLibrary.Entities;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace ContactBook.ViewModels;
+namespace WpfUI.ViewModels;
 
 public class ContactsViewModel : ObservableObject
 {
@@ -46,11 +48,11 @@ public class ContactsViewModel : ObservableObject
         get { return !_isEditMode; }
     }
 
-    public ObservableCollection<Person> Contacts { get; set; }
+    public ObservableCollection<PersonModel> Contacts { get; set; }
 
-    private Person _selectedContact;
+    private PersonModel _selectedContact;
 
-    public Person SelectedContact
+    public PersonModel SelectedContact
     {
         get
         {
@@ -69,9 +71,9 @@ public class ContactsViewModel : ObservableObject
     public ICommand CreateContactCommand { get; private set; }
     public ICommand DeleteContactCommand { get; private set; }
 
-    public void LoadContacts(IEnumerable<Person> contacts)
+    public void LoadContacts(IEnumerable<PersonModel> contacts)
     {
-        Contacts = new ObservableCollection<Person>(contacts);
+        Contacts = new ObservableCollection<PersonModel>(contacts);
         OnPropertyChanged(nameof(Contacts));
     }
 
@@ -108,26 +110,34 @@ public class ContactsViewModel : ObservableObject
             LastName = "Lastname"
         };
 
-        Contacts.Add(newContact);
         using ContactDbContext db = _dbContext.CreateDbContext();
-        db.Add(newContact);
+        EntityEntry<Person> person = db.Contacts.Add(newContact);
         db.SaveChanges();
-        SelectedContact = newContact;
-        OnPropertyChanged(nameof(SelectedContact));
+
+        PersonModel p = PersonModel.ToPersonModelMap(newContact);
+        Contacts.Add(p);
+        SelectedContact = p;
     }
 
     private void UpdateContact()
     {
-        Person contact = Contacts.FirstOrDefault(p => p.Id == SelectedContact.Id);
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-        if (contact != null)
+        if (person != null)
         {
-            using ContactDbContext db = _dbContext.CreateDbContext();
-            db.Update(contact);
+            person.FirstName = SelectedContact.FirstName;
+            person.LastName = SelectedContact.LastName;
+            person.Addresses = SelectedContact.Addresses;
+            person.PhoneNumbers = SelectedContact.PhoneNumbers;
+            person.EmailAddresses = SelectedContact.EmailAddresses;
+            person.ImagePath = SelectedContact.ImagePath;
+            person.IsFavorite = SelectedContact.IsFavorite;
             db.SaveChanges();
-            IsEditMode = false;
-            OnPropertyChanged(nameof(SelectedContact));
         }
+
+        IsEditMode = false;
+        OnPropertyChanged(nameof(SelectedContact));
     }
 
     private void UpdateContactImage()
@@ -135,40 +145,45 @@ public class ContactsViewModel : ObservableObject
         string filePath = _dialogService.OpenFile("Image files|*.bmp;*.jpg;*.jpeg;*.png;|All files");
         SelectedContact.ImagePath = filePath;
 
-        Person contact = Contacts.FirstOrDefault(p => p.Id == SelectedContact.Id);
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-        if (contact != null)
+        if (person != null)
         {
-            using ContactDbContext db = _dbContext.CreateDbContext();
-            db.Update(contact);
+            person.ImagePath = SelectedContact.ImagePath;
             db.SaveChanges();
-            OnPropertyChanged(nameof(SelectedContact));
         }
+
+        OnPropertyChanged(nameof(SelectedContact));
     }
 
     private void FavoriteContact()
     {
-        Person contact = Contacts.FirstOrDefault(p => p.Id == SelectedContact.Id);
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-        if (contact != null)
+        if (person != null)
         {
-            using ContactDbContext db = _dbContext.CreateDbContext();
-            db.Update(contact);
+            person.IsFavorite = SelectedContact.IsFavorite;
             db.SaveChanges();
-            OnPropertyChanged(nameof(SelectedContact));
         }
+
+        OnPropertyChanged(nameof(SelectedContact));
     }
 
     private void DeleteContact()
     {
-        if (SelectedContact != null)
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
+
+        if (person != null)
         {
-            using ContactDbContext db = _dbContext.CreateDbContext();
-            db.Remove(SelectedContact);
+            db.Contacts.Remove(person);
             db.SaveChanges();
-            Contacts.Remove(SelectedContact);
-            SelectedContact = null;
-            OnPropertyChanged(nameof(SelectedContact));
         }
+
+        Contacts.Remove(SelectedContact);
+        SelectedContact = null;
+        IsEditMode = false;
     }
 }

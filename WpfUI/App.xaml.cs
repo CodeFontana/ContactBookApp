@@ -1,5 +1,5 @@
-﻿using ContactBook.Services;
-using ContactBook.ViewModels;
+﻿using WpfUI.Services;
+using WpfUI.ViewModels;
 using DataAccessLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +8,9 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
-namespace ContactBook;
+namespace WpfUI;
 
 public partial class App : Application
 {
@@ -55,14 +56,32 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         await _appHost.StartAsync();
+        
         using IServiceScope scope = _appHost.Services.CreateScope();
         ContactDbContextFactory dbContext = scope.ServiceProvider.GetRequiredService<ContactDbContextFactory>();
         using ContactDbContext db = dbContext.CreateDbContext();
         db.Database.Migrate();
+
+        EventManager.RegisterClassHandler(typeof(TextBox),
+                                          TextBox.GotKeyboardFocusEvent,
+                                          new RoutedEventHandler(SelectAllText));
+
         Window mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
         mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         mainWindow.Show();
         base.OnStartup(e);
+    }
+
+    private void SelectAllText(object sender, RoutedEventArgs e)
+    {
+        var textBox = sender as TextBox;
+        if (textBox != null)
+        {
+            if (textBox.IsReadOnly == false)
+            {
+                textBox.SelectAll();
+            }
+        }
     }
 
     protected override async void OnExit(ExitEventArgs e)
