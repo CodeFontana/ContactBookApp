@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using WpfUI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WpfUI.ViewModels;
 public class BookViewModel : ObservableObject
@@ -43,6 +44,10 @@ public class BookViewModel : ObservableObject
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
         IEnumerable<PersonModel> contacts = db.Contacts
+            .Include(x => x.PhoneNumbers)
+            .Include(x => x.EmailAddresses)
+            .Include(x => x.Addresses)
+            .AsSplitQuery()
             .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
         ContactsVM.LoadContacts(contacts);
     }
@@ -51,6 +56,10 @@ public class BookViewModel : ObservableObject
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
         IEnumerable<PersonModel> favorites = db.Contacts
+            .Include(x => x.PhoneNumbers)
+            .Include(x => x.EmailAddresses)
+            .Include(x => x.Addresses)
+            .AsSplitQuery()
             .Where(c => c.IsFavorite)
             .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
         ContactsVM.LoadContacts(favorites);
