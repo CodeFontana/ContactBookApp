@@ -8,7 +8,7 @@ using System.Windows.Input;
 using WpfUI.Models;
 using DataAccessLibrary.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace WpfUI.ViewModels;
 
@@ -27,6 +27,9 @@ public class ContactsViewModel : ObservableObject
         AddPhoneNumber = new RelayCommand(AddContactPhone, IsEdit);
         AddEmailAddress = new RelayCommand(AddContactEmail, IsEdit);
         AddPhysicalAddress = new RelayCommand(AddContactAddress, IsEdit);
+        RemovePhoneNumber = new RelayCommand<int>(RemoveContactPhone);
+        RemoveEmailAddress = new RelayCommand<int>(RemoveContactEmail);
+        RemovePhysicalAddress = new RelayCommand<int>(RemoveContactAddress);
         UpdateContactCommand = new RelayCommand(UpdateContact, IsEdit);
         UpdateContactImageCommand = new RelayCommand(UpdateContactImage, IsEdit);
         FavoriteContactCommand = new RelayCommand(FavoriteContact);
@@ -72,6 +75,9 @@ public class ContactsViewModel : ObservableObject
     public ICommand AddPhoneNumber { get; private set; }
     public ICommand AddEmailAddress { get; private set; }
     public ICommand AddPhysicalAddress { get; private set; }
+    public ICommand RemovePhoneNumber { get; private set; }
+    public ICommand RemoveEmailAddress { get; private set; }
+    public ICommand RemovePhysicalAddress { get; private set; }
     public ICommand UpdateContactCommand { get; private set; }
     public ICommand FavoriteContactCommand { get; private set; }
     public ICommand UpdateContactImageCommand { get; private set; }
@@ -129,7 +135,12 @@ public class ContactsViewModel : ObservableObject
     private void UpdateContact()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
-        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
+        Person person = db.Contacts
+            .Include(x => x.PhoneNumbers)
+            .Include(x => x.EmailAddresses)
+            .Include(x => x.Addresses)
+            .AsSplitQuery()
+            .FirstOrDefault(x => x.Id == SelectedContact.Id);
 
         if (person != null)
         {
@@ -158,6 +169,34 @@ public class ContactsViewModel : ObservableObject
     private void AddContactAddress()
     {
         SelectedContact.Addresses.Add(new Address());
+    }
+    private void RemoveContactPhone(int id)
+    {
+        Phone p = SelectedContact.PhoneNumbers.FirstOrDefault(x => x.Id == id);
+
+        if (p is not null)
+        {
+            SelectedContact.PhoneNumbers.Remove(p);
+        }
+    }
+    private void RemoveContactEmail(int id)
+    {
+        Email e = SelectedContact.EmailAddresses.FirstOrDefault(x => x.Id == id);
+
+        if (e is not null)
+        {
+            SelectedContact.EmailAddresses.Remove(e);
+        }
+    }
+
+    private void RemoveContactAddress(int id)
+    {
+        Address a = SelectedContact.Addresses.FirstOrDefault(x => x.Id == id);
+
+        if (a is not null)
+        {
+            SelectedContact.Addresses.Remove(a);
+        }
     }
 
     private void UpdateContactImage()
