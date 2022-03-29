@@ -14,6 +14,7 @@
     <None Remove="Resources\defaultContact.png" />
     <None Remove="Resources\deleteIcon.png" />
     <None Remove="Resources\hoverStar.png" />
+    <None Remove="Resources\minus.png" />
     <None Remove="Resources\plus.png" />
     <None Remove="Resources\saveIcon.png" />
     <None Remove="Resources\uncheckedStar.png" />
@@ -36,6 +37,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\hoverStar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\minus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\plus.png">
