@@ -7,7 +7,6 @@ using System.Linq;
 using System.Windows.Input;
 using WpfUI.Models;
 using DataAccessLibrary.Entities;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
 
 namespace WpfUI.ViewModels;
@@ -151,6 +150,7 @@ public class ContactsViewModel : ObservableObject
             person.EmailAddresses = SelectedContact.EmailAddresses;
             person.ImagePath = SelectedContact.ImagePath;
             person.IsFavorite = SelectedContact.IsFavorite;
+            db.Entry(person).State = EntityState.Modified;
             db.SaveChanges();
         }
 
@@ -233,7 +233,12 @@ public class ContactsViewModel : ObservableObject
     private void DeleteContact()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
-        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
+        Person person = db.Contacts
+            .Include(x => x.PhoneNumbers)
+            .Include(x => x.EmailAddresses)
+            .Include(x => x.Addresses)
+            .AsSplitQuery()
+            .FirstOrDefault(x => x.Id == SelectedContact.Id);
 
         if (person != null)
         {
