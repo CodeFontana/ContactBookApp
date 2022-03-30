@@ -4,7 +4,7 @@ using DataAccessLibrary;
 
 namespace WpfUI.ViewModels;
 
-public class MainViewModel : ObservableObject
+public class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {

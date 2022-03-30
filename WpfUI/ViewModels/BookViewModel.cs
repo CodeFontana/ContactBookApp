@@ -4,8 +4,8 @@ using DataAccessLibrary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using WpfUI.Models;
 using Microsoft.EntityFrameworkCore;
+using DataAccessLibrary.Models;
 
 namespace WpfUI.ViewModels;
 public class BookViewModel : ObservableObject

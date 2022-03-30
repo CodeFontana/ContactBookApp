@@ -1,8 +1,7 @@
-﻿using WpfUI.Utilities;
-using DataAccessLibrary.Entities;
+﻿using DataAccessLibrary.Entities;
 using System.Collections.ObjectModel;
 
-namespace WpfUI.Models;
+namespace DataAccessLibrary.Models;
 
 public class PersonModel : ObservableObject
 {

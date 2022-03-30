@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WpfUI.Utilities;
+namespace DataAccessLibrary.Models;
 
 public class ObservableObject : INotifyPropertyChanged
 {

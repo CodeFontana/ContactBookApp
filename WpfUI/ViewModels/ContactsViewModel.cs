@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using WpfUI.Models;
 using DataAccessLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
+using DataAccessLibrary.Models;
 
 namespace WpfUI.ViewModels;
 
-public class ContactsViewModel : ObservableObject
+public class ContactsViewModel : ViewModelBase
 {
     private readonly ContactDbContextFactory _dbContext;
     private readonly IDialogService _dialogService;
