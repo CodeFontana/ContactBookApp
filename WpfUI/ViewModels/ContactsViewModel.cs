@@ -124,7 +124,7 @@ public class ContactsViewModel : ObservableObject
         };
 
         using ContactDbContext db = _dbContext.CreateDbContext();
-        EntityEntry<Person> person = db.Contacts.Add(newContact);
+        db.Contacts.Add(newContact);
         db.SaveChanges();
 
         PersonModel p = PersonModel.ToPersonModelMap(newContact);
