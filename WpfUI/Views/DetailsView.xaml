@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfUI.Views" 
              xmlns:vm="clr-namespace:WpfUI.ViewModels" 
+             xmlns:c="clr-namespace:WpfUI.Controls" 
              d:DataContext="{d:DesignInstance Type=vm:ContactsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="450">
@@ -50,7 +51,7 @@
                         <Label Content="{Binding SelectedContact.FullName, FallbackValue=Alan Turing}"
                                Visibility="{Binding IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"
                                HorizontalAlignment="Center"
-                               FontSize="24" />
+                               FontSize="28" />
                     </StackPanel>
 
                     <CheckBox Style="{StaticResource favoriteCheckbox}"
@@ -103,7 +104,8 @@
                 <DockPanel>
                     <Label FontWeight="Bold" 
                            Foreground="#FFF5F7F9"
-                           Content="Phone Numbers" />
+                           Content="Phone Numbers"
+                           FontSize="16"/>
                     <Button Command="{Binding AddPhoneNumber}"
                             Margin="10 0 10 0"
                             Height="20"
@@ -127,17 +129,19 @@
                                 <Grid HorizontalAlignment="Stretch">
                                     <Label Style="{StaticResource ContentLabel}" 
                                            Content="{Binding PhoneNumber}"
+                                           FontSize="14"
                                            Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Grid.Column="0"
-                                                 Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 Style="{StaticResource EditBox}"
-                                                 Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-                                                 HorizontalContentAlignment="Stretch"/>
+                                        <c:TextboxWithPreview Grid.Column="0"
+                                                              Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              TextPreview="631-555-1234"
+                                                              FontSize="14"
+                                                              Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                              HorizontalContentAlignment="Stretch"/>
                                         <Button Grid.Column="1"
                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhoneNumber}"
                                                 CommandParameter="{Binding Id}"
@@ -167,7 +171,8 @@
                 <DockPanel>
                     <Label FontWeight="Bold" 
                            Foreground="#FFF5F7F9"
-                           Content="Email Addresses" />
+                           Content="Email Addresses"
+                           FontSize="16"/>
                     <Button Command="{Binding AddEmailAddress}"
                             Margin="10 0 10 0"
                             Height="20"
@@ -188,17 +193,19 @@
                     <DataTemplate>
                         <StackPanel>
                             <Label Style="{StaticResource ContentLabel}" 
-                                       Content="{Binding EmailAddress}"
-                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                   Content="{Binding EmailAddress}"
+                                   FontSize="14"
+                                   Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0"
-                                         Text="{Binding EmailAddress}"
-                                         Style="{StaticResource EditBox}"
-                                         Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <c:TextboxWithPreview Grid.Column="0"
+                                                      Text="{Binding EmailAddress}"
+                                                      TextPreview="someone@example.com"
+                                                      FontSize="14"
+                                                      Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 <Button Grid.Column="1"
                                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemoveEmailAddress}"
                                         CommandParameter="{Binding Id}"
@@ -226,7 +233,8 @@
                     <DockPanel>
                         <Label FontWeight="Bold" 
                                Foreground="#FFF5F7F9"
-                               Content="Physical Addresses" />
+                               Content="Physical Addresses"
+                               FontSize="16"/>
                         <Button Command="{Binding AddPhysicalAddress}"
                                 Margin="10 0 10 0"
                                 Height="20"
@@ -240,25 +248,33 @@
                         </Button>
                     </DockPanel>
                 </Border>
-                <ListView ItemsSource="{Binding SelectedContact.Addresses}">
+                <ListView ItemsSource="{Binding SelectedContact.Addresses}"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Label Style="{StaticResource ContentLabel}" 
-                                       Content="{Binding FullAddress}"
+                                       Content="{Binding FullAddress, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="14"
                                        Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsDisplayMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                <Grid>
+                                <Grid Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0"
-                                                Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <TextBox Text="{Binding StreetAddress}" Style="{StaticResource EditBox}"/>
-                                        <TextBox Text="{Binding City}" Style="{StaticResource EditBox}"/>
-                                        <TextBox Text="{Binding State}" Style="{StaticResource EditBox}"/>
-                                        <TextBox Text="{Binding ZipCode}" Style="{StaticResource EditBox}"/>
-                                    </StackPanel>
+                                    <Grid Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="4*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <c:TextboxWithPreview Grid.Column="0" Margin="0 0 5 0" Text="{Binding StreetAddress}" TextPreview="Street address" FontSize="14"/>
+                                        <c:TextboxWithPreview Grid.Column="1" Margin="0 0 5 0" Text="{Binding City}" TextPreview="Town or City" FontSize="14"/>
+                                        <c:TextboxWithPreview Grid.Column="2" Margin="0 0 5 0" Text="{Binding State}" TextPreview="State" FontSize="14"/>
+                                        <c:TextboxWithPreview Grid.Column="3" Margin="0 0 5 0" Text="{Binding ZipCode}" TextPreview="Zip code" FontSize="14" />
+                                    </Grid>
                                     <Button Grid.Column="1"
                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhysicalAddress}"
                                             CommandParameter="{Binding Id}"
