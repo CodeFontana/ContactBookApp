@@ -34,7 +34,11 @@ public partial class App : Application
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddSingleton(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
+                    services.AddDbContext<ContactDbContext>(options =>
+                    {
+                        options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Notes.db;");
+                    });
+                    services.AddScoped(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
                     services.AddScoped<IDialogService, WindowDialogService>();
                     services.AddScoped<MainViewModel>();
                     services.AddScoped(sp => new MainWindow(sp.GetRequiredService<MainViewModel>()));
