@@ -6,6 +6,7 @@ namespace DataAccessLibrary.Entities;
 
 public class Person
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
