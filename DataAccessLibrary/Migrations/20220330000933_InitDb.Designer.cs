@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLibrary.Migrations
 {
     [DbContext(typeof(ContactDbContext))]
-    [Migration("20220328211606_InitDb")]
+    [Migration("20220330000933_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
