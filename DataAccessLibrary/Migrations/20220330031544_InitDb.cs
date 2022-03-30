@@ -30,11 +30,11 @@ namespace DataAccessLibrary.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    PersonId = table.Column<int>(type: "INTEGER", nullable: false),
                     StreetAddress = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     City = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     State = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    ZipCode = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    PersonId = table.Column<int>(type: "INTEGER", nullable: true)
+                    ZipCode = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,8 @@ namespace DataAccessLibrary.Migrations
                         name: "FK_Address_Contacts_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Contacts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,8 +53,8 @@ namespace DataAccessLibrary.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    EmailAddress = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    PersonId = table.Column<int>(type: "INTEGER", nullable: true)
+                    PersonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EmailAddress = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,7 +63,8 @@ namespace DataAccessLibrary.Migrations
                         name: "FK_Email_Contacts_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Contacts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,8 +73,8 @@ namespace DataAccessLibrary.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    PersonId = table.Column<int>(type: "INTEGER", nullable: true)
+                    PersonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,7 +83,8 @@ namespace DataAccessLibrary.Migrations
                         name: "FK_Phone_Contacts_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Contacts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

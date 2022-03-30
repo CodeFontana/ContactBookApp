@@ -8,6 +8,8 @@ public class Address
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    public int PersonId { get; set; }
+
     [MaxLength(100, ErrorMessage = "Street address must be 100 characters or less")]
     public string StreetAddress { get; set; }
 
