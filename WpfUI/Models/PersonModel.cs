@@ -82,8 +82,14 @@ public class PersonModel : ObservableObject
 
     public ObservableCollection<Email> EmailAddresses
     {
-        get { return _emailAddresses; }
-        set { _emailAddresses = value; }
+        get 
+        { 
+            return _emailAddresses; 
+        }
+        set 
+        {
+            OnPropertyChanged(ref _emailAddresses, value);
+        }
     }
 
     private string _imagePath;
