@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfUI"
         xmlns:vm="clr-namespace:WpfUI.ViewModels"
         mc:Ignorable="d"
-        Title="Contact Book" Height="650" Width="800">
+        Title="Contact Book" Height="700" Width="1000">
 
     <Window.DataContext>
         <vm:MainViewModel />
@@ -74,8 +74,8 @@
         <!-- Content -->
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="613*"/>
-                <ColumnDefinition Width="187*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <ContentControl Content="{Binding CurrentViewModel}" Grid.ColumnSpan="2" />
         </Grid>
