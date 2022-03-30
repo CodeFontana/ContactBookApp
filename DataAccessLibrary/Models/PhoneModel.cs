@@ -31,4 +31,14 @@ public class PhoneModel : ObservableObject
             PhoneNumber = phone.PhoneNumber
         };
     }
+
+    public static Phone ToPhoneMap(PhoneModel phone)
+    {
+        return new Phone()
+        {
+            Id = phone.Id,
+            PersonId = phone.PersonId,
+            PhoneNumber = phone.PhoneNumber
+        };
+    }
 }

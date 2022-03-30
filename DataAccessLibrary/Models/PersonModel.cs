@@ -1,5 +1,6 @@
 ﻿using DataAccessLibrary.Entities;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace DataAccessLibrary.Models;
 
@@ -9,9 +10,9 @@ public class PersonModel : ObservableObject
     {
         _firstName = "";
         _lastName = "";
-        _addresses = new ObservableCollection<Address>();
-        _phoneNumbers = new ObservableCollection<Phone>();
-        _emailAddresses = new ObservableCollection<Email>();
+        _addresses = new ObservableCollection<AddressModel>();
+        _phoneNumbers = new ObservableCollection<PhoneModel>();
+        _emailAddresses = new ObservableCollection<EmailModel>();
         _imagePath = null;
         _isFavorite = false;
     }
@@ -51,8 +52,8 @@ public class PersonModel : ObservableObject
         get => $"{FirstName} {LastName}"; 
     }
 
-    private ObservableCollection<Address> _addresses;
-    public ObservableCollection<Address> Addresses
+    private ObservableCollection<AddressModel> _addresses;
+    public ObservableCollection<AddressModel> Addresses
     {
         get
         {
@@ -64,8 +65,8 @@ public class PersonModel : ObservableObject
         }
     }
 
-    private ObservableCollection<Phone> _phoneNumbers;
-    public ObservableCollection<Phone> PhoneNumbers
+    private ObservableCollection<PhoneModel> _phoneNumbers;
+    public ObservableCollection<PhoneModel> PhoneNumbers
     {
         get
         {
@@ -77,9 +78,9 @@ public class PersonModel : ObservableObject
         }
     }
 
-    private ObservableCollection<Email> _emailAddresses;
+    private ObservableCollection<EmailModel> _emailAddresses;
 
-    public ObservableCollection<Email> EmailAddresses
+    public ObservableCollection<EmailModel> EmailAddresses
     {
         get 
         { 
@@ -124,9 +125,9 @@ public class PersonModel : ObservableObject
             Id = person.Id,
             FirstName = person.FirstName,
             LastName = person.LastName,
-            Addresses = person.Addresses,
-            PhoneNumbers = person.PhoneNumbers,
-            EmailAddresses = person.EmailAddresses,
+            Addresses = new ObservableCollection<AddressModel>(person.Addresses.ToList().Select(x => AddressModel.ToAddressModelMap(x))),
+            PhoneNumbers = new ObservableCollection<PhoneModel>(person.PhoneNumbers.ToList().Select(x => PhoneModel.ToPhoneModelMap(x))),
+            EmailAddresses = new ObservableCollection<EmailModel>(person.EmailAddresses.ToList().Select(x => EmailModel.ToEmailModelMap(x))),
             ImagePath = person.ImagePath,
             IsFavorite = person.IsFavorite
         };

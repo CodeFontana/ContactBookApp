@@ -31,4 +31,14 @@ public class EmailModel : ObservableObject
             EmailAddress = email.EmailAddress
         };
     }
+
+    public static Email ToEmailMap(EmailModel email)
+    {
+        return new Email()
+        {
+            Id = email.Id,
+            PersonId = email.PersonId,
+            EmailAddress = email.EmailAddress
+        };
+    }
 }

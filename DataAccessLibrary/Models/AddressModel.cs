@@ -82,4 +82,17 @@ public class AddressModel : ObservableObject
             ZipCode = address.ZipCode
         };
     }
+
+    public static Address ToAddressMap(AddressModel address)
+    {
+        return new Address()
+        {
+            Id = address.Id,
+            PersonId = address.PersonId,
+            StreetAddress = address.StreetAddress,
+            City = address.City,
+            State = address.State,
+            ZipCode = address.ZipCode
+        };
+    }
 }

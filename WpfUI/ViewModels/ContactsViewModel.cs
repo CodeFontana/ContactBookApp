@@ -145,9 +145,9 @@ public class ContactsViewModel : ViewModelBase
         {
             person.FirstName = SelectedContact.FirstName;
             person.LastName = SelectedContact.LastName;
-            person.Addresses = SelectedContact.Addresses;
-            person.PhoneNumbers = SelectedContact.PhoneNumbers;
-            person.EmailAddresses = SelectedContact.EmailAddresses;
+            person.Addresses = new ObservableCollection<Address>(SelectedContact.Addresses.ToList().Select(x => AddressModel.ToAddressMap(x)));
+            person.PhoneNumbers = new ObservableCollection<Phone>(SelectedContact.PhoneNumbers.ToList().Select(x => PhoneModel.ToPhoneMap(x)));
+            person.EmailAddresses = new ObservableCollection<Email>(SelectedContact.EmailAddresses.ToList().Select(x => EmailModel.ToEmailMap(x)));
             person.ImagePath = SelectedContact.ImagePath;
             person.IsFavorite = SelectedContact.IsFavorite;
             db.SaveChanges();
@@ -158,20 +158,20 @@ public class ContactsViewModel : ViewModelBase
     }
     private void AddContactPhone()
     {
-        SelectedContact.PhoneNumbers.Add(new Phone());
+        SelectedContact.PhoneNumbers.Add(new PhoneModel());
     }
     private void AddContactEmail()
     {
-        SelectedContact.EmailAddresses.Add(new Email());
+        SelectedContact.EmailAddresses.Add(new EmailModel());
     }
 
     private void AddContactAddress()
     {
-        SelectedContact.Addresses.Add(new Address());
+        SelectedContact.Addresses.Add(new AddressModel());
     }
     private void RemoveContactPhone(int id)
     {
-        Phone p = SelectedContact.PhoneNumbers.FirstOrDefault(x => x.Id == id);
+        PhoneModel p = SelectedContact.PhoneNumbers.FirstOrDefault(x => x.Id == id);
 
         if (p is not null)
         {
@@ -180,7 +180,7 @@ public class ContactsViewModel : ViewModelBase
     }
     private void RemoveContactEmail(int id)
     {
-        Email e = SelectedContact.EmailAddresses.FirstOrDefault(x => x.Id == id);
+        EmailModel e = SelectedContact.EmailAddresses.FirstOrDefault(x => x.Id == id);
 
         if (e is not null)
         {
@@ -190,7 +190,7 @@ public class ContactsViewModel : ViewModelBase
 
     private void RemoveContactAddress(int id)
     {
-        Address a = SelectedContact.Addresses.FirstOrDefault(x => x.Id == id);
+        AddressModel a = SelectedContact.Addresses.FirstOrDefault(x => x.Id == id);
 
         if (a is not null)
         {
