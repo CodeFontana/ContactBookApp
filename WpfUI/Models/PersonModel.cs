@@ -1,6 +1,5 @@
 ﻿using WpfUI.Utilities;
 using DataAccessLibrary.Entities;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace WpfUI.Models;
@@ -13,7 +12,7 @@ public class PersonModel : ObservableObject
         _lastName = "";
         _addresses = new ObservableCollection<Address>();
         _phoneNumbers = new ObservableCollection<Phone>();
-        _emails = new ObservableCollection<Email>();
+        _emailAddresses = new ObservableCollection<Email>();
         _imagePath = null;
         _isFavorite = false;
     }
@@ -79,12 +78,12 @@ public class PersonModel : ObservableObject
         }
     }
 
-    private ObservableCollection<Email> _emails;
+    private ObservableCollection<Email> _emailAddresses;
 
     public ObservableCollection<Email> EmailAddresses
     {
-        get { return _emails; }
-        set { _emails = value; }
+        get { return _emailAddresses; }
+        set { _emailAddresses = value; }
     }
 
     private string _imagePath;
