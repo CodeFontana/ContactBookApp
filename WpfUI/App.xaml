@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:WpfUI"
              xmlns:vm="clr-namespace:WpfUI.ViewModels"
              xmlns:v="clr-namespace:WpfUI.Views"
+             xmlns:c="clr-namespace:WpfUI.Controls"
              xmlns:helper="clr-namespace:WpfUI.Helpers">
     
     <Application.Resources>
@@ -153,6 +154,35 @@
 
                         </ControlTemplate.Triggers>
 
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Textbox with Preview-->
+        <Style x:Key="{x:Type c:TextboxWithPreview}" BasedOn="{StaticResource {x:Type TextBox}}" TargetType="{x:Type c:TextboxWithPreview}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type c:TextboxWithPreview}">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+                            <Grid x:Name="LayoutGrid">
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="2" />
+                                <Label x:Name="TextPreview" 
+                                       Content="{Binding TextPreview, RelativeSource={RelativeSource TemplatedParent}}"
+                                       FontStyle="Italic" 
+                                       Margin="2" 
+                                       Padding="2,0,0,0" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Visibility" TargetName="TextPreview" Value="Hidden" />
+                            </Trigger>
+                            <Trigger Property="HasText" Value="True">
+                                <Setter Property="Visibility" TargetName="TextPreview" Value="Hidden" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
