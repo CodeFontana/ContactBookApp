@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -55,5 +56,19 @@ public class TextboxWithPreview : TextBox
         }
 
         base.OnTextInput(e);    
+    }
+
+    protected override void OnTextChanged(TextChangedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(Text) == false)
+        {
+            HasText = true;
+        }
+        else
+        {
+            HasText = false;
+        }
+
+        base.OnTextChanged(e);
     }
 }
