@@ -36,7 +36,7 @@ public partial class App : Application
                 {
                     services.AddDbContext<ContactDbContext>(options =>
                     {
-                        options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Notes.db;");
+                        options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Contacts.db;");
                     });
                     services.AddScoped(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
                     services.AddScoped<IDialogService, WindowDialogService>();
