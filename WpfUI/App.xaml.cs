@@ -38,10 +38,10 @@ public partial class App : Application
                     {
                         options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Contacts.db;");
                     });
-                    services.AddScoped(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
-                    services.AddScoped<IDialogService, WindowDialogService>();
-                    services.AddScoped<MainViewModel>();
-                    services.AddScoped(sp => new MainWindow(sp.GetRequiredService<MainViewModel>()));
+                    services.AddTransient(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
+                    services.AddTransient<IDialogService, WindowDialogService>();
+                    services.AddTransient<MainViewModel>();
+                    services.AddSingleton(sp => new MainWindow(sp.GetRequiredService<MainViewModel>()));
                 })
                 .Build();
         }
