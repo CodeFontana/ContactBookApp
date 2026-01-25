@@ -8,8 +8,8 @@ public class EmailModel : ObservableObject
 
     public int PersonId { get; set; }
 
-    private string _emailAddress;
-    public string EmailAddress
+    private string? _emailAddress;
+    public string? EmailAddress
     {
         get
         {

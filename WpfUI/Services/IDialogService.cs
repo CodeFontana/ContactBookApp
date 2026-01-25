@@ -2,6 +2,6 @@
 
 public interface IDialogService
 {
-    string OpenFile(string filter);
+    string? OpenFile(string filter);
     void ShowMessageBox(string message);
 }

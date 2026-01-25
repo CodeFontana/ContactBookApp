@@ -8,8 +8,8 @@ public class PhoneModel : ObservableObject
 
     public int PersonId { get; set; }
 
-    private string _phoneNumber;
-    public string PhoneNumber
+    private string? _phoneNumber;
+    public string? PhoneNumber
     {
         get
         {

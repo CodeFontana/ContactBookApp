@@ -4,7 +4,7 @@ namespace WpfUI.Services;
 
 public class WindowDialogService : IDialogService
 {
-    public string OpenFile(string filter)
+    public string? OpenFile(string filter)
     {
         OpenFileDialog dialog = new();
 
@@ -18,6 +18,6 @@ public class WindowDialogService : IDialogService
 
     public void ShowMessageBox(string message)
     {
-        
+
     }
 }

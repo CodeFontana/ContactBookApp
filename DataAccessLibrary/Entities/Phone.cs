@@ -11,5 +11,5 @@ public class Phone
     public int PersonId { get; set; }
 
     [MaxLength(20, ErrorMessage = "Phone number must be 20 characters or less")]
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 }

@@ -1,31 +1,30 @@
-﻿using WpfUI.Services;
-using WpfUI.Utilities;
-using DataAccessLibrary;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
+using DataAccessLibrary;
 using DataAccessLibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using WpfUI.Services;
+using WpfUI.Utilities;
 
 namespace WpfUI.ViewModels;
+
 public class BookViewModel : ObservableObject
 {
     private readonly ContactDbContextFactory _dbContext;
-    private readonly IDialogService _dialogService;
 
-    public BookViewModel(ContactDbContextFactory dbContext, 
+    public BookViewModel(ContactDbContextFactory dbContext,
                          IDialogService dialogService)
     {
         ContactsVM = new ContactsViewModel(dbContext, dialogService);
         LoadContactsCommand = new RelayCommand(LoadContacts);
         LoadFavoritesCommand = new RelayCommand(LoadFavorites);
         _dbContext = dbContext;
-        _dialogService = dialogService;
         LoadContacts();
     }
 
-    private ContactsViewModel _contactsVM;
-    public ContactsViewModel ContactsVM
+    private ContactsViewModel? _contactsVM;
+    public ContactsViewModel? ContactsVM
     {
         get
         {
@@ -43,6 +42,7 @@ public class BookViewModel : ObservableObject
     private void LoadContacts()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
+
         IEnumerable<PersonModel> contacts = db.Contacts
             .Include(x => x.PhoneNumbers)
             .Include(x => x.EmailAddresses)
@@ -50,12 +50,14 @@ public class BookViewModel : ObservableObject
             .AsSplitQuery()
             .AsNoTracking()
             .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
-        ContactsVM.LoadContacts(contacts);
+
+        ContactsVM?.LoadContacts(contacts);
     }
 
     private void LoadFavorites()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
+
         IEnumerable<PersonModel> favorites = db.Contacts
             .Include(x => x.PhoneNumbers)
             .Include(x => x.EmailAddresses)
@@ -64,6 +66,7 @@ public class BookViewModel : ObservableObject
             .Where(c => c.IsFavorite)
             .AsNoTracking()
             .Select(x => PersonModel.ToPersonModelMap(x)).ToList();
-        ContactsVM.LoadContacts(favorites);
+
+        ContactsVM?.LoadContacts(favorites);
     }
 }

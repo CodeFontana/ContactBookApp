@@ -8,8 +8,8 @@ public class AddressModel : ObservableObject
 
     public int PersonId { get; set; }
 
-    private string _streetAddress;
-    public string StreetAddress
+    private string? _streetAddress;
+    public string? StreetAddress
     {
         get
         {
@@ -23,8 +23,8 @@ public class AddressModel : ObservableObject
         }
     }
 
-    private string _city;
-    public string City
+    private string? _city;
+    public string? City
     {
         get
         {
@@ -38,8 +38,8 @@ public class AddressModel : ObservableObject
         }
     }
 
-    private string _state;
-    public string State
+    private string? _state;
+    public string? State
     {
         get
         {
@@ -53,8 +53,8 @@ public class AddressModel : ObservableObject
         }
     }
 
-    private string _zipCode;
-    public string ZipCode
+    private string? _zipCode;
+    public string? ZipCode
     {
         get
         {

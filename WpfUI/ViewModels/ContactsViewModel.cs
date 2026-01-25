@@ -1,13 +1,13 @@
-﻿using WpfUI.Services;
-using WpfUI.Utilities;
-using DataAccessLibrary;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using DataAccessLibrary;
 using DataAccessLibrary.Entities;
-using Microsoft.EntityFrameworkCore;
 using DataAccessLibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using WpfUI.Services;
+using WpfUI.Utilities;
 
 namespace WpfUI.ViewModels;
 
@@ -54,11 +54,11 @@ public class ContactsViewModel : ViewModelBase
         get { return !_isEditMode; }
     }
 
-    public ObservableCollection<PersonModel> Contacts { get; set; }
+    public ObservableCollection<PersonModel> Contacts { get; set; } = [];
 
-    private PersonModel _selectedContact;
+    private PersonModel? _selectedContact;
 
-    public PersonModel SelectedContact
+    public PersonModel? SelectedContact
     {
         get
         {
@@ -101,7 +101,7 @@ public class ContactsViewModel : ViewModelBase
 
     private bool CanDelete()
     {
-        return SelectedContact == null ? false : true;
+        return SelectedContact != null;
     }
 
     private void EditContact()
@@ -134,114 +134,127 @@ public class ContactsViewModel : ViewModelBase
     private void UpdateContact()
     {
         using ContactDbContext db = _dbContext.CreateDbContext();
-        Person person = db.Contacts
+
+        if (SelectedContact is not null)
+        {
+            Person? person = db.Contacts
             .Include(x => x.PhoneNumbers)
             .Include(x => x.EmailAddresses)
             .Include(x => x.Addresses)
             .AsSplitQuery()
             .FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-        if (person != null)
-        {
-            person.FirstName = SelectedContact.FirstName;
-            person.LastName = SelectedContact.LastName;
-            person.Addresses = new ObservableCollection<Address>(SelectedContact.Addresses.ToList().Select(x => AddressModel.ToAddressMap(x)));
-            person.PhoneNumbers = new ObservableCollection<Phone>(SelectedContact.PhoneNumbers.ToList().Select(x => PhoneModel.ToPhoneMap(x)));
-            person.EmailAddresses = new ObservableCollection<Email>(SelectedContact.EmailAddresses.ToList().Select(x => EmailModel.ToEmailMap(x)));
-            person.ImagePath = SelectedContact.ImagePath;
-            person.IsFavorite = SelectedContact.IsFavorite;
-            db.SaveChanges();
-        }
+            if (person != null)
+            {
+                person.FirstName = SelectedContact.FirstName;
+                person.LastName = SelectedContact.LastName;
+                person.Addresses = new ObservableCollection<Address>(SelectedContact.Addresses.ToList().Select(x => AddressModel.ToAddressMap(x)));
+                person.PhoneNumbers = new ObservableCollection<Phone>(SelectedContact.PhoneNumbers.ToList().Select(x => PhoneModel.ToPhoneMap(x)));
+                person.EmailAddresses = new ObservableCollection<Email>(SelectedContact.EmailAddresses.ToList().Select(x => EmailModel.ToEmailMap(x)));
+                person.ImagePath = SelectedContact.ImagePath;
+                person.IsFavorite = SelectedContact.IsFavorite;
+                db.SaveChanges();
+            }
 
-        IsEditMode = false;
-        OnPropertyChanged(nameof(SelectedContact));
+            IsEditMode = false;
+            OnPropertyChanged(nameof(SelectedContact));
+        }
     }
     private void AddContactPhone()
     {
-        SelectedContact.PhoneNumbers.Add(new PhoneModel());
+        SelectedContact?.PhoneNumbers.Add(new PhoneModel());
     }
     private void AddContactEmail()
     {
-        SelectedContact.EmailAddresses.Add(new EmailModel());
+        SelectedContact?.EmailAddresses.Add(new EmailModel());
     }
 
     private void AddContactAddress()
     {
-        SelectedContact.Addresses.Add(new AddressModel());
+        SelectedContact?.Addresses.Add(new AddressModel());
     }
     private void RemoveContactPhone(int id)
     {
-        PhoneModel p = SelectedContact.PhoneNumbers.FirstOrDefault(x => x.Id == id);
+        PhoneModel? p = SelectedContact?.PhoneNumbers.FirstOrDefault(x => x.Id == id);
 
         if (p is not null)
         {
-            SelectedContact.PhoneNumbers.Remove(p);
+            SelectedContact?.PhoneNumbers.Remove(p);
         }
     }
     private void RemoveContactEmail(int id)
     {
-        EmailModel e = SelectedContact.EmailAddresses.FirstOrDefault(x => x.Id == id);
+        EmailModel? e = SelectedContact?.EmailAddresses.FirstOrDefault(x => x.Id == id);
 
         if (e is not null)
         {
-            SelectedContact.EmailAddresses.Remove(e);
+            SelectedContact?.EmailAddresses.Remove(e);
         }
     }
 
     private void RemoveContactAddress(int id)
     {
-        AddressModel a = SelectedContact.Addresses.FirstOrDefault(x => x.Id == id);
+        AddressModel? a = SelectedContact?.Addresses.FirstOrDefault(x => x.Id == id);
 
         if (a is not null)
         {
-            SelectedContact.Addresses.Remove(a);
+            SelectedContact?.Addresses.Remove(a);
         }
     }
 
     private void UpdateContactImage()
     {
-        string filePath = _dialogService.OpenFile("Image files|*.bmp;*.jpg;*.jpeg;*.png;|All files");
-        SelectedContact.ImagePath = filePath;
-
-        using ContactDbContext db = _dbContext.CreateDbContext();
-        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
-
-        if (person != null)
+        if (SelectedContact is not null)
         {
-            person.ImagePath = SelectedContact.ImagePath;
-            db.SaveChanges();
-        }
+            string? filePath = _dialogService.OpenFile("Image files|*.bmp;*.jpg;*.jpeg;*.png;|All files");
+            SelectedContact.ImagePath = filePath;
 
-        OnPropertyChanged(nameof(SelectedContact));
+            using ContactDbContext db = _dbContext.CreateDbContext();
+            Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
+
+            if (person != null)
+            {
+                person.ImagePath = SelectedContact.ImagePath;
+                db.SaveChanges();
+            }
+
+            OnPropertyChanged(nameof(SelectedContact));
+        }
     }
 
     private void FavoriteContact()
     {
-        using ContactDbContext db = _dbContext.CreateDbContext();
-        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
-
-        if (person != null)
+        if (SelectedContact is not null)
         {
-            person.IsFavorite = SelectedContact.IsFavorite;
-            db.SaveChanges();
-        }
+            using ContactDbContext db = _dbContext.CreateDbContext();
+            Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-        OnPropertyChanged(nameof(SelectedContact));
+            if (person != null)
+            {
+                person.IsFavorite = SelectedContact.IsFavorite;
+                db.SaveChanges();
+            }
+
+            OnPropertyChanged(nameof(SelectedContact));
+        }
     }
 
     private void DeleteContact()
     {
-        using ContactDbContext db = _dbContext.CreateDbContext();
-        Person person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
-
-        if (person != null)
+        if (SelectedContact is not null)
         {
-            db.Contacts.Remove(person);
-            db.SaveChanges();
-        }
+            using ContactDbContext db = _dbContext.CreateDbContext();
+            Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-        Contacts.Remove(SelectedContact);
-        SelectedContact = null;
-        IsEditMode = false;
+            if (person != null)
+            {
+                db.Contacts.Remove(person);
+                db.SaveChanges();
+            }
+
+            Contacts.Remove(SelectedContact);
+            SelectedContact = null;
+            IsEditMode = false;
+        }
     }
 }

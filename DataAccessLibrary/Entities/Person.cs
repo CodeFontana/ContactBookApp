@@ -26,7 +26,7 @@ public class Person
 
     public ObservableCollection<Email> EmailAddresses { get; set; } = new();
 
-    public string ImagePath { get; set; }
+    public string? ImagePath { get; set; }
 
-    public bool IsFavorite { get; set; } = false; 
+    public bool IsFavorite { get; set; } = false;
 }

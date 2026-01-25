@@ -1,18 +1,18 @@
-﻿using WpfUI.Services;
-using WpfUI.ViewModels;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 using DataAccessLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Windows;
-using System.Windows.Controls;
+using WpfUI.Services;
+using WpfUI.ViewModels;
 
 namespace WpfUI;
 
 public partial class App : Application
 {
-    private IHost _appHost;
+    private IHost? _appHost;
 
     public App()
     {
@@ -46,21 +46,24 @@ public partial class App : Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        await _appHost.StartAsync();
-        
-        using IServiceScope scope = _appHost.Services.CreateScope();
-        ContactDbContextFactory dbContext = scope.ServiceProvider.GetRequiredService<ContactDbContextFactory>();
-        using ContactDbContext db = dbContext.CreateDbContext();
-        db.Database.Migrate();
+        if (_appHost is not null)
+        {
+            await _appHost.StartAsync();
 
-        EventManager.RegisterClassHandler(typeof(TextBox),
-                                          TextBox.GotKeyboardFocusEvent,
-                                          new RoutedEventHandler(SelectAllText));
+            using IServiceScope scope = _appHost.Services.CreateScope();
+            ContactDbContextFactory dbContext = scope.ServiceProvider.GetRequiredService<ContactDbContextFactory>();
+            using ContactDbContext db = dbContext.CreateDbContext();
+            db.Database.Migrate();
 
-        Window mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
-        mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        mainWindow.Show();
-        base.OnStartup(e);
+            EventManager.RegisterClassHandler(typeof(TextBox),
+                                              TextBox.GotKeyboardFocusEvent,
+                                              new RoutedEventHandler(SelectAllText));
+
+            Window mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            mainWindow.Show();
+            base.OnStartup(e);
+        }
     }
 
     private void SelectAllText(object sender, RoutedEventArgs e)

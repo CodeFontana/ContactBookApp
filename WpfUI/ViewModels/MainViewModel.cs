@@ -1,6 +1,5 @@
-﻿using WpfUI.Services;
-using WpfUI.Utilities;
-using DataAccessLibrary;
+﻿using DataAccessLibrary;
+using WpfUI.Services;
 
 namespace WpfUI.ViewModels;
 
@@ -11,7 +10,7 @@ public class MainViewModel : ViewModelBase
         // For design mode
     }
 
-    public MainViewModel(ContactDbContextFactory dbContext, 
+    public MainViewModel(ContactDbContextFactory dbContext,
                          IDialogService dialogService)
     {
         BookVM = new BookViewModel(dbContext, dialogService);
@@ -19,8 +18,8 @@ public class MainViewModel : ViewModelBase
 
     }
 
-    private object _currentViewModel;
-    public object CurrentViewModel
+    private object? _currentViewModel;
+    public object? CurrentViewModel
     {
         get
         {
@@ -32,8 +31,8 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    private BookViewModel _bookVM;
-    public BookViewModel BookVM
+    private BookViewModel? _bookVM;
+    public BookViewModel? BookVM
     {
         get
         {

@@ -11,5 +11,5 @@ public class Email
     public int PersonId { get; set; }
 
     [MaxLength(100, ErrorMessage = "Email address must be 100 characters or less")]
-    public string EmailAddress { get; set; }
+    public string? EmailAddress { get; set; }
 }

@@ -1,6 +1,5 @@
-﻿using DataAccessLibrary.Entities;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
+using DataAccessLibrary.Entities;
 
 namespace DataAccessLibrary.Models;
 
@@ -10,9 +9,9 @@ public class PersonModel : ObservableObject
     {
         _firstName = "";
         _lastName = "";
-        _addresses = new ObservableCollection<AddressModel>();
-        _phoneNumbers = new ObservableCollection<PhoneModel>();
-        _emailAddresses = new ObservableCollection<EmailModel>();
+        _addresses = [];
+        _phoneNumbers = [];
+        _emailAddresses = [];
         _imagePath = null;
         _isFavorite = false;
     }
@@ -47,9 +46,9 @@ public class PersonModel : ObservableObject
         }
     }
 
-    public string FullName 
-    { 
-        get => $"{FirstName} {LastName}"; 
+    public string FullName
+    {
+        get => $"{FirstName} {LastName}";
     }
 
     private ObservableCollection<AddressModel> _addresses;
@@ -82,18 +81,18 @@ public class PersonModel : ObservableObject
 
     public ObservableCollection<EmailModel> EmailAddresses
     {
-        get 
-        { 
-            return _emailAddresses; 
+        get
+        {
+            return _emailAddresses;
         }
-        set 
+        set
         {
             OnPropertyChanged(ref _emailAddresses, value);
         }
     }
 
-    private string _imagePath;
-    public string ImagePath
+    private string? _imagePath;
+    public string? ImagePath
     {
         get
         {
