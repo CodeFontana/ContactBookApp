@@ -188,6 +188,8 @@
             </Setter>
         </Style>
 
+        <helper:ImagePathToBitmapSourceConverter x:Key="ImagePathToBitmapSourceConverter" />
+
         <BitmapImage x:Key="DefaultContactImage" 
                      UriSource="/Resources/defaultContact.png" />
 

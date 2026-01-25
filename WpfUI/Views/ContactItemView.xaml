@@ -14,9 +14,12 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Image Grid.Column="0" 
+        <Image Grid.Column="0"
                Margin="5"
-               Source="{Binding ImagePath, FallbackValue={StaticResource DefaultContactImage},TargetNullValue={StaticResource DefaultContactImage}}" />
+               Source="{Binding ImagePath,
+                                Converter={StaticResource ImagePathToBitmapSourceConverter},
+                                FallbackValue={StaticResource DefaultContactImage},
+                                TargetNullValue={StaticResource DefaultContactImage}}" />
 
         <StackPanel Grid.Column="1"
                     Margin="5"

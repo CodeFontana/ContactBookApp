@@ -63,7 +63,7 @@
                       Width="125">
                     <Image Height="125" 
                            Width="125"
-                           Source="{Binding SelectedContact.ImagePath, FallbackValue={StaticResource DefaultContactImage}, TargetNullValue={StaticResource DefaultContactImage}}" />
+                           Source="{Binding SelectedContact.ImagePath, Converter={StaticResource ImagePathToBitmapSourceConverter}, FallbackValue={StaticResource DefaultContactImage}, TargetNullValue={StaticResource DefaultContactImage}}" />
                     <Button Command="{Binding UpdateContactImageCommand}"
                             Style="{StaticResource MenuIconButton}"
                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
