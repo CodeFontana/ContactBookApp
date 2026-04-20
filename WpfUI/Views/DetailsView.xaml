@@ -80,7 +80,8 @@
 
             <StackPanel Grid.Column="1"
                         VerticalAlignment="Bottom"
-                        Orientation="Horizontal">
+                        Orientation="Vertical"
+                        Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Button Command="{Binding UpdateContactCommand}"
                         Style="{StaticResource MenuIconButton}"
                         Background="{StaticResource MaximumBlueGreen}"
@@ -92,6 +93,15 @@
                             <Image Source="/Resources/saveIcon.png" />
                             <Label FontWeight="Bold">Save</Label>
                         </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Command="{Binding CancelEditCommand}"
+                        Style="{StaticResource MenuIconButton}"
+                        Width="90"
+                        Height="40"
+                        Margin="5">
+                    <Button.Content>
+                        <Label FontWeight="Bold">Cancel</Label>
                     </Button.Content>
                 </Button>
             </StackPanel>
@@ -144,7 +154,7 @@
                                                               HorizontalContentAlignment="Stretch"/>
                                         <Button Grid.Column="1"
                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhoneNumberCommand}"
-                                                CommandParameter="{Binding Id}"
+                                                CommandParameter="{Binding}"
                                                 Margin="10 0 10 0"
                                                 Height="20"
                                                 Width="20"
@@ -208,7 +218,7 @@
                                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 <Button Grid.Column="1"
                                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemoveEmailAddressCommand}"
-                                        CommandParameter="{Binding Id}"
+                                        CommandParameter="{Binding}"
                                         Margin="10 0 10 0"
                                         Height="20"
                                         Width="20"
@@ -277,7 +287,7 @@
                                     </Grid>
                                     <Button Grid.Column="1"
                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhysicalAddressCommand}"
-                                            CommandParameter="{Binding Id}"
+                                            CommandParameter="{Binding}"
                                             Margin="10 0 10 0"
                                             Height="20"
                                             Width="20"

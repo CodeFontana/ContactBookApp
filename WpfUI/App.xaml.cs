@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using DataAccessLibrary;
@@ -21,7 +22,12 @@ public partial class App : Application
     {
         try
         {
-            string connectionString = $@"Data Source={Environment.CurrentDirectory}\Contacts.db;";
+            string appDataDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "ContactBookApp");
+            Directory.CreateDirectory(appDataDir);
+            string dbPath = Path.Combine(appDataDir, "Contacts.db");
+            string connectionString = $"Data Source={dbPath};";
 
             _appHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
