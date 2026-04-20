@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System.Windows;
+using Microsoft.Win32;
 
 namespace WpfUI.Services;
 
@@ -6,7 +7,10 @@ public class WindowDialogService : IDialogService
 {
     public string? OpenFile(string filter)
     {
-        OpenFileDialog dialog = new();
+        OpenFileDialog dialog = new()
+        {
+            Filter = filter
+        };
 
         if (dialog.ShowDialog() == true)
         {
@@ -18,6 +22,10 @@ public class WindowDialogService : IDialogService
 
     public void ShowMessageBox(string message)
     {
-
+        MessageBox.Show(
+            message,
+            "Contact Book",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
     }
 }
