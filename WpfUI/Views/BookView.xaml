@@ -17,8 +17,40 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
-            <ListView ItemsSource="{Binding ContactsVM.Contacts}" 
-                      SelectedItem="{Binding ContactsVM.SelectedContact}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0"
+                     Margin="5"
+                     Padding="4,2"
+                     FontSize="14"
+                     Text="{Binding ContactsVM.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Filter the contact list by first or last name." />
+
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        Margin="5,0,5,5">
+                <Label Content="Sort:" VerticalAlignment="Center" />
+                <Button Content="Last name"
+                        Command="{Binding ContactsVM.SortByLastNameCommand}"
+                        Margin="0,0,5,0"
+                        Padding="6,2" />
+                <Button Content="First name"
+                        Command="{Binding ContactsVM.SortByFirstNameCommand}"
+                        Margin="0,0,5,0"
+                        Padding="6,2" />
+                <Button Content="Favorites"
+                        Command="{Binding ContactsVM.SortByFavoriteCommand}"
+                        Padding="6,2" />
+            </StackPanel>
+
+            <ListView Grid.Row="2"
+                      ItemsSource="{Binding ContactsVM.ContactsView}" 
+                      SelectedItem="{Binding ContactsVM.SelectedContact}"
+                      IsSynchronizedWithCurrentItem="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <local:ContactItemView />
@@ -35,6 +67,25 @@
                     </ContentControl.Content>
                 </ContentControl>
             </ScrollViewer>
+
+            <!-- Empty state: shown when no contact is selected. -->
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding ContactsVM.SelectedContact, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Invert}">
+                <Image Source="{StaticResource DefaultContactImage}"
+                       Width="120"
+                       Height="120"
+                       Opacity="0.25" />
+                <TextBlock Text="Select a contact to view details"
+                           FontSize="18"
+                           Foreground="Gray"
+                           HorizontalAlignment="Center"
+                           Margin="0,15,0,5" />
+                <TextBlock Text="…or click the + button to add a new one"
+                           FontSize="13"
+                           Foreground="Gray"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
         </Grid>
 
     </Grid>

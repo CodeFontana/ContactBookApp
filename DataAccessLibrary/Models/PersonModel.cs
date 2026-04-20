@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using DataAccessLibrary.Entities;
 
 namespace DataAccessLibrary.Models;
@@ -19,6 +20,9 @@ public class PersonModel : ObservableObject
     public int Id { get; set; }
 
     private string _firstName;
+
+    [Required(ErrorMessage = "First name is required")]
+    [MaxLength(50, ErrorMessage = "First name must be 50 characters or less")]
     public string FirstName
     {
         get
@@ -33,6 +37,9 @@ public class PersonModel : ObservableObject
     }
 
     private string _lastName;
+
+    [Required(ErrorMessage = "Last name is required")]
+    [MaxLength(50, ErrorMessage = "Last name must be 50 characters or less")]
     public string LastName
     {
         get

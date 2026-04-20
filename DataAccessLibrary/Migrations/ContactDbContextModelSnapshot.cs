@@ -37,6 +37,9 @@ namespace DataAccessLibrary.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ZipCode")
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
@@ -59,6 +62,9 @@ namespace DataAccessLibrary.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PersonId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -107,6 +113,9 @@ namespace DataAccessLibrary.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

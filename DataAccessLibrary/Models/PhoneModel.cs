@@ -1,4 +1,5 @@
-﻿using DataAccessLibrary.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using DataAccessLibrary.Entities;
 
 namespace DataAccessLibrary.Models;
 
@@ -8,18 +9,21 @@ public class PhoneModel : ObservableObject
 
     public int PersonId { get; set; }
 
+    private ContactType _type = ContactType.Mobile;
+    public ContactType Type
+    {
+        get { return _type; }
+        set { OnPropertyChanged(ref _type, value); }
+    }
+
     private string? _phoneNumber;
+
+    [Required(ErrorMessage = "Phone number is required")]
+    [MaxLength(20, ErrorMessage = "Phone number must be 20 characters or less")]
     public string? PhoneNumber
     {
-        get
-        {
-            return _phoneNumber;
-        }
-
-        set
-        {
-            OnPropertyChanged(ref _phoneNumber, value);
-        }
+        get { return _phoneNumber; }
+        set { OnPropertyChanged(ref _phoneNumber, value); }
     }
 
     public static PhoneModel ToPhoneModelMap(Phone phone)
@@ -28,7 +32,8 @@ public class PhoneModel : ObservableObject
         {
             Id = phone.Id,
             PersonId = phone.PersonId,
-            PhoneNumber = phone.PhoneNumber
+            Type = phone.Type,
+            PhoneNumber = phone.PhoneNumber,
         };
     }
 
@@ -38,7 +43,8 @@ public class PhoneModel : ObservableObject
         {
             Id = phone.Id,
             PersonId = phone.PersonId,
-            PhoneNumber = phone.PhoneNumber
+            Type = phone.Type,
+            PhoneNumber = phone.PhoneNumber,
         };
     }
 }

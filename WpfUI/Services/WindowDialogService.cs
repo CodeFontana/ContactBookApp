@@ -28,4 +28,16 @@ public class WindowDialogService : IDialogService
             MessageBoxButton.OK,
             MessageBoxImage.Information);
     }
+
+    public bool Confirm(string message)
+    {
+        MessageBoxResult result = MessageBox.Show(
+            message,
+            "Contact Book",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question,
+            MessageBoxResult.No);
+
+        return result == MessageBoxResult.Yes;
+    }
 }

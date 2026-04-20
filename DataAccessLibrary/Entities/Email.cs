@@ -10,6 +10,8 @@ public class Email
 
     public int PersonId { get; set; }
 
+    public ContactType Type { get; set; } = ContactType.Home;
+
     [MaxLength(100, ErrorMessage = "Email address must be 100 characters or less")]
     public string? EmailAddress { get; set; }
 }

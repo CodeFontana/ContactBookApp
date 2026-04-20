@@ -9,6 +9,17 @@
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Title="Contact Book" Height="700" Width="1000">
 
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl"
+                    Command="{Binding BookVM.ContactsVM.CreateContactCommand}" />
+        <KeyBinding Key="S" Modifiers="Ctrl"
+                    Command="{Binding BookVM.ContactsVM.UpdateContactCommand}" />
+        <KeyBinding Key="Escape"
+                    Command="{Binding BookVM.ContactsVM.CancelEditCommand}" />
+        <KeyBinding Key="Delete"
+                    Command="{Binding BookVM.ContactsVM.DeleteContactCommand}" />
+    </Window.InputBindings>
+
     <DockPanel>
 
         <!-- Toolbar -->

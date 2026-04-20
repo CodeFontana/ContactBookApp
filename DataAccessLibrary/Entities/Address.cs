@@ -10,6 +10,8 @@ public class Address
 
     public int PersonId { get; set; }
 
+    public ContactType Type { get; set; } = ContactType.Home;
+
     [MaxLength(100, ErrorMessage = "Street address must be 100 characters or less")]
     public string? StreetAddress { get; set; }
 

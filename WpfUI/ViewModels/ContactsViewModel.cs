@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 using DataAccessLibrary;
 using DataAccessLibrary.Entities;
@@ -29,6 +32,11 @@ public class ContactsViewModel : ObservableObject
     {
         _dbContext = dbContext;
         _dialogService = dialogService;
+
+        ContactsView = CollectionViewSource.GetDefaultView(Contacts);
+        ContactsView.Filter = FilterContact;
+        ApplySort(SortMode.LastName);
+
         CreateContactCommand = new RelayCommand(CreateContact, CanCreate);
         EditContactCommand = new RelayCommand(EditContact, CanEdit);
         CancelEditCommand = new RelayCommand(CancelEdit, IsEdit);
@@ -42,6 +50,9 @@ public class ContactsViewModel : ObservableObject
         UpdateContactImageCommand = new RelayCommand(UpdateContactImage, IsEdit);
         FavoriteContactCommand = new RelayCommand(FavoriteContact);
         DeleteContactCommand = new RelayCommand(DeleteContact, CanDelete);
+        SortByLastNameCommand = new RelayCommand(() => ApplySort(SortMode.LastName));
+        SortByFirstNameCommand = new RelayCommand(() => ApplySort(SortMode.FirstName));
+        SortByFavoriteCommand = new RelayCommand(() => ApplySort(SortMode.Favorite));
     }
 
     private bool _isEditMode;
@@ -64,6 +75,30 @@ public class ContactsViewModel : ObservableObject
     }
 
     public ObservableCollection<PersonModel> Contacts { get; } = [];
+
+    // Filtered + sorted view over Contacts. The UI binds to this so search/sort don't mutate
+    // the underlying collection.
+    public ICollectionView ContactsView { get; }
+
+    private string _searchText = string.Empty;
+    public string SearchText
+    {
+        get { return _searchText; }
+        set
+        {
+            if (OnPropertyChanged(ref _searchText, value))
+            {
+                ContactsView.Refresh();
+            }
+        }
+    }
+
+    private SortMode _currentSort = SortMode.LastName;
+    public SortMode CurrentSort
+    {
+        get { return _currentSort; }
+        private set { OnPropertyChanged(ref _currentSort, value); }
+    }
 
     private PersonModel? _selectedContact;
 
@@ -92,6 +127,49 @@ public class ContactsViewModel : ObservableObject
     public ICommand UpdateContactImageCommand { get; private set; }
     public ICommand CreateContactCommand { get; private set; }
     public ICommand DeleteContactCommand { get; private set; }
+    public ICommand SortByLastNameCommand { get; private set; }
+    public ICommand SortByFirstNameCommand { get; private set; }
+    public ICommand SortByFavoriteCommand { get; private set; }
+
+    private bool FilterContact(object item)
+    {
+        if (item is not PersonModel person)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(_searchText))
+        {
+            return true;
+        }
+
+        return person.FullName.Contains(_searchText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ApplySort(SortMode mode)
+    {
+        ContactsView.SortDescriptions.Clear();
+
+        switch (mode)
+        {
+            case SortMode.FirstName:
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.FirstName), ListSortDirection.Ascending));
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.LastName), ListSortDirection.Ascending));
+                break;
+            case SortMode.Favorite:
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.IsFavorite), ListSortDirection.Descending));
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.LastName), ListSortDirection.Ascending));
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.FirstName), ListSortDirection.Ascending));
+                break;
+            case SortMode.LastName:
+            default:
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.LastName), ListSortDirection.Ascending));
+                ContactsView.SortDescriptions.Add(new SortDescription(nameof(PersonModel.FirstName), ListSortDirection.Ascending));
+                break;
+        }
+
+        CurrentSort = mode;
+    }
 
     public void LoadContacts(IEnumerable<PersonModel> contacts)
     {
@@ -126,7 +204,9 @@ public class ContactsViewModel : ObservableObject
 
     private bool CanDelete()
     {
-        return SelectedContact is not null;
+        // Block delete during edit mode so the global "Delete" key shortcut doesn't
+        // hijack a backspace/delete keystroke while the user is typing in a field.
+        return SelectedContact is not null && !IsEditMode;
     }
 
     private bool IsEdit()
@@ -243,7 +323,7 @@ public class ContactsViewModel : ObservableObject
         List<(PhoneModel Model, Phone Entity)> phonePairs = [];
         foreach (PhoneModel pm in model.PhoneNumbers)
         {
-            Phone newPhone = new() { PhoneNumber = pm.PhoneNumber };
+            Phone newPhone = new() { Type = pm.Type, PhoneNumber = pm.PhoneNumber };
             entity.PhoneNumbers.Add(newPhone);
             phonePairs.Add((pm, newPhone));
         }
@@ -251,7 +331,7 @@ public class ContactsViewModel : ObservableObject
         List<(EmailModel Model, Email Entity)> emailPairs = [];
         foreach (EmailModel em in model.EmailAddresses)
         {
-            Email newEmail = new() { EmailAddress = em.EmailAddress };
+            Email newEmail = new() { Type = em.Type, EmailAddress = em.EmailAddress };
             entity.EmailAddresses.Add(newEmail);
             emailPairs.Add((em, newEmail));
         }
@@ -261,6 +341,7 @@ public class ContactsViewModel : ObservableObject
         {
             Address newAddress = new()
             {
+                Type = am.Type,
                 StreetAddress = am.StreetAddress,
                 City = am.City,
                 State = am.State,
@@ -329,7 +410,12 @@ public class ContactsViewModel : ObservableObject
         {
             if (m.Id == 0)
             {
-                Phone newPhone = new() { PersonId = personId, PhoneNumber = m.PhoneNumber };
+                Phone newPhone = new()
+                {
+                    PersonId = personId,
+                    Type = m.Type,
+                    PhoneNumber = m.PhoneNumber,
+                };
                 entities.Add(newPhone);
                 created.Add((m, newPhone));
             }
@@ -338,6 +424,7 @@ public class ContactsViewModel : ObservableObject
                 Phone? existing = entities.FirstOrDefault(e => e.Id == m.Id);
                 if (existing is not null)
                 {
+                    existing.Type = m.Type;
                     existing.PhoneNumber = m.PhoneNumber;
                 }
             }
@@ -358,7 +445,12 @@ public class ContactsViewModel : ObservableObject
         {
             if (m.Id == 0)
             {
-                Email newEmail = new() { PersonId = personId, EmailAddress = m.EmailAddress };
+                Email newEmail = new()
+                {
+                    PersonId = personId,
+                    Type = m.Type,
+                    EmailAddress = m.EmailAddress,
+                };
                 entities.Add(newEmail);
                 created.Add((m, newEmail));
             }
@@ -367,6 +459,7 @@ public class ContactsViewModel : ObservableObject
                 Email? existing = entities.FirstOrDefault(e => e.Id == m.Id);
                 if (existing is not null)
                 {
+                    existing.Type = m.Type;
                     existing.EmailAddress = m.EmailAddress;
                 }
             }
@@ -390,6 +483,7 @@ public class ContactsViewModel : ObservableObject
                 Address newAddress = new()
                 {
                     PersonId = personId,
+                    Type = m.Type,
                     StreetAddress = m.StreetAddress,
                     City = m.City,
                     State = m.State,
@@ -403,6 +497,7 @@ public class ContactsViewModel : ObservableObject
                 Address? existing = entities.FirstOrDefault(e => e.Id == m.Id);
                 if (existing is not null)
                 {
+                    existing.Type = m.Type;
                     existing.StreetAddress = m.StreetAddress;
                     existing.City = m.City;
                     existing.State = m.State;
@@ -522,11 +617,19 @@ public class ContactsViewModel : ObservableObject
             return;
         }
 
-        // For an unsaved draft (Id == 0) there's no DB row — just drop it from the UI list.
-        // The previous code did `FirstOrDefault(x => x.Id == 0)` which would silently delete
-        // some other unsaved row, or no row at all.
+        // Drafts haven't been persisted, so silently drop them — no need to bother the user.
+        // For real rows, ask first; deletes here cascade to phones/emails/addresses.
         if (SelectedContact.Id != 0)
         {
+            string name = string.IsNullOrWhiteSpace(SelectedContact.FullName)
+                ? "this contact"
+                : SelectedContact.FullName.Trim();
+
+            if (!_dialogService.Confirm($"Delete {name}? This can't be undone."))
+            {
+                return;
+            }
+
             using ContactDbContext db = _dbContext.CreateDbContext();
             Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
@@ -557,11 +660,23 @@ public class ContactsViewModel : ObservableObject
 
         foreach (PhoneModel p in source.PhoneNumbers)
         {
-            clone.PhoneNumbers.Add(new PhoneModel { Id = p.Id, PersonId = p.PersonId, PhoneNumber = p.PhoneNumber });
+            clone.PhoneNumbers.Add(new PhoneModel
+            {
+                Id = p.Id,
+                PersonId = p.PersonId,
+                Type = p.Type,
+                PhoneNumber = p.PhoneNumber,
+            });
         }
         foreach (EmailModel e in source.EmailAddresses)
         {
-            clone.EmailAddresses.Add(new EmailModel { Id = e.Id, PersonId = e.PersonId, EmailAddress = e.EmailAddress });
+            clone.EmailAddresses.Add(new EmailModel
+            {
+                Id = e.Id,
+                PersonId = e.PersonId,
+                Type = e.Type,
+                EmailAddress = e.EmailAddress,
+            });
         }
         foreach (AddressModel a in source.Addresses)
         {
@@ -569,6 +684,7 @@ public class ContactsViewModel : ObservableObject
             {
                 Id = a.Id,
                 PersonId = a.PersonId,
+                Type = a.Type,
                 StreetAddress = a.StreetAddress,
                 City = a.City,
                 State = a.State,
@@ -604,3 +720,11 @@ public class ContactsViewModel : ObservableObject
         }
     }
 }
+
+public enum SortMode
+{
+    LastName,
+    FirstName,
+    Favorite,
+}
+

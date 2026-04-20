@@ -31,6 +31,7 @@ namespace DataAccessLibrary.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PersonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 1),
                     StreetAddress = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     City = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     State = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
@@ -54,6 +55,7 @@ namespace DataAccessLibrary.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PersonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 1),
                     EmailAddress = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
@@ -74,6 +76,7 @@ namespace DataAccessLibrary.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PersonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true)
                 },
                 constraints: table =>

@@ -10,6 +10,8 @@ public class Phone
 
     public int PersonId { get; set; }
 
+    public ContactType Type { get; set; } = ContactType.Mobile;
+
     [MaxLength(20, ErrorMessage = "Phone number must be 20 characters or less")]
     public string? PhoneNumber { get; set; }
 }
