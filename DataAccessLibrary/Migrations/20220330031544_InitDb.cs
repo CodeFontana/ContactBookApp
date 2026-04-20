@@ -25,7 +25,7 @@ namespace DataAccessLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -38,9 +38,9 @@ namespace DataAccessLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Address_Contacts_PersonId",
+                        name: "FK_Addresses_Contacts_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
@@ -48,7 +48,7 @@ namespace DataAccessLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Email",
+                name: "Emails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -58,9 +58,9 @@ namespace DataAccessLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Email", x => x.Id);
+                    table.PrimaryKey("PK_Emails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Email_Contacts_PersonId",
+                        name: "FK_Emails_Contacts_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
@@ -68,7 +68,7 @@ namespace DataAccessLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Phone",
+                name: "Phones",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -78,9 +78,9 @@ namespace DataAccessLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Phone", x => x.Id);
+                    table.PrimaryKey("PK_Phones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Phone_Contacts_PersonId",
+                        name: "FK_Phones_Contacts_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
@@ -88,31 +88,31 @@ namespace DataAccessLibrary.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Address_PersonId",
-                table: "Address",
+                name: "IX_Addresses_PersonId",
+                table: "Addresses",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Email_PersonId",
-                table: "Email",
+                name: "IX_Emails_PersonId",
+                table: "Emails",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Phone_PersonId",
-                table: "Phone",
+                name: "IX_Phones_PersonId",
+                table: "Phones",
                 column: "PersonId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Email");
+                name: "Emails");
 
             migrationBuilder.DropTable(
-                name: "Phone");
+                name: "Phones");
 
             migrationBuilder.DropTable(
                 name: "Contacts");

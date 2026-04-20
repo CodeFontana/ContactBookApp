@@ -47,7 +47,7 @@ namespace DataAccessLibrary.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Email", b =>
@@ -67,7 +67,7 @@ namespace DataAccessLibrary.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Email");
+                    b.ToTable("Emails");
                 });
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Person", b =>
@@ -114,7 +114,7 @@ namespace DataAccessLibrary.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Phone");
+                    b.ToTable("Phones");
                 });
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Address", b =>

@@ -14,7 +14,7 @@ namespace DataAccessLibrary.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.6");
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Address", b =>
                 {
@@ -45,7 +45,7 @@ namespace DataAccessLibrary.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Email", b =>
@@ -65,7 +65,7 @@ namespace DataAccessLibrary.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Email");
+                    b.ToTable("Emails");
                 });
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Person", b =>
@@ -112,7 +112,7 @@ namespace DataAccessLibrary.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Phone");
+                    b.ToTable("Phones");
                 });
 
             modelBuilder.Entity("DataAccessLibrary.Entities.Address", b =>
