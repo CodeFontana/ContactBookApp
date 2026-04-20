@@ -19,7 +19,7 @@ public class Address
     [MaxLength(50, ErrorMessage = "State must be 50 characters or less")]
     public string? State { get; set; }
 
-    [MaxLength(50, ErrorMessage = "Zip code must be 10 characters or less")]
+    [MaxLength(10, ErrorMessage = "Zip code must be 10 characters or less")]
     public string? ZipCode { get; set; }
 
     public string FullAddress { get => $"{StreetAddress} {City}, {State}  {ZipCode}"; }

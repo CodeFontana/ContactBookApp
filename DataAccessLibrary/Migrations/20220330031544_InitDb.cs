@@ -34,7 +34,7 @@ namespace DataAccessLibrary.Migrations
                     StreetAddress = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     City = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     State = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    ZipCode = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true)
+                    ZipCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {

@@ -40,7 +40,7 @@ namespace DataAccessLibrary.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ZipCode")
-                        .HasMaxLength(50)
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
