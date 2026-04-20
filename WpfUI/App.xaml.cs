@@ -85,14 +85,9 @@ public partial class App : Application
 
     private void SelectAllText(object sender, RoutedEventArgs e)
     {
-        TextBox? textBox = sender as TextBox;
-
-        if (textBox != null)
+        if (sender is TextBox { IsReadOnly: false } textBox)
         {
-            if (textBox.IsReadOnly == false)
-            {
-                textBox.SelectAll();
-            }
+            textBox.SelectAll();
         }
     }
 
