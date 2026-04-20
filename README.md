@@ -31,7 +31,7 @@ ContactBookApp.sln
 └── WpfUI/                    WPF app (net10.0-windows)
     ├── App.xaml(.cs)         Generic Host bootstrap, DI registrations, EF migrate on startup
     ├── MainWindow.xaml(.cs)  Top toolbar + ContentControl host
-    ├── ViewModels/           MainViewModel, BookViewModel, ContactsViewModel, ViewModelBase
+    ├── ViewModels/           MainViewModel, BookViewModel, ContactsViewModel
     ├── Views/                BookView, DetailsView, ContactItemView
     ├── Controls/             TextboxWithPreview (custom TextBox)
     ├── Helpers/              Value converters
@@ -42,7 +42,7 @@ ContactBookApp.sln
 
 ## How the MVVM plumbing fits together
 
-- **`ObservableObject` / `ViewModelBase`** — minimal `INotifyPropertyChanged` bases with a `[CallerMemberName]`‑aware setter helper.
+- **`ObservableObject`** — a minimal `INotifyPropertyChanged` base (in `DataAccessLibrary.Models`) with a `[CallerMemberName]`‑aware setter helper. Both DTO models and view‑models inherit from it.
 - **`RelayCommand` / `RelayCommand<T>`** — `ICommand` implementations that hook into `CommandManager.RequerySuggested` so `CanExecute` is re‑queried automatically as the user interacts with the UI.
 - **DTO models** (`PersonModel`, `AddressModel`, …) — separate from EF entities. Each model exposes `static ToXxxModelMap(entity)` and `ToXxxMap(model)` helpers so the UI never binds directly to tracked entities.
 - **View resolution by data template** — `App.xaml` registers `<DataTemplate DataType="{x:Type vm:BookViewModel}">` so a `ContentControl` bound to a view‑model automatically picks up the correct view.

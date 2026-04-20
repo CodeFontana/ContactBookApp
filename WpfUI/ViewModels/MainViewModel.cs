@@ -1,9 +1,10 @@
 ﻿using DataAccessLibrary;
+using DataAccessLibrary.Models;
 using WpfUI.Services;
 
 namespace WpfUI.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public class MainViewModel : ObservableObject
 {
     public MainViewModel()
     {

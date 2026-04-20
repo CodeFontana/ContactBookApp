@@ -11,7 +11,7 @@ using WpfUI.Utilities;
 
 namespace WpfUI.ViewModels;
 
-public class ContactsViewModel : ViewModelBase
+public class ContactsViewModel : ObservableObject
 {
     private readonly ContactDbContextFactory _dbContext;
     private readonly IDialogService _dialogService;
