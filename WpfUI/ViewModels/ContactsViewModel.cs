@@ -6,6 +6,7 @@ using DataAccessLibrary;
 using DataAccessLibrary.Entities;
 using DataAccessLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using WpfUI.Helpers;
 using WpfUI.Services;
 using WpfUI.Utilities;
 
@@ -54,7 +55,7 @@ public class ContactsViewModel : ObservableObject
         get { return !_isEditMode; }
     }
 
-    public ObservableCollection<PersonModel> Contacts { get; set; } = [];
+    public ObservableCollection<PersonModel> Contacts { get; } = [];
 
     private PersonModel? _selectedContact;
 
@@ -85,8 +86,12 @@ public class ContactsViewModel : ObservableObject
 
     public void LoadContacts(IEnumerable<PersonModel> contacts)
     {
-        Contacts = new ObservableCollection<PersonModel>(contacts);
-        OnPropertyChanged(nameof(Contacts));
+        Contacts.Clear();
+
+        foreach (PersonModel contact in contacts)
+        {
+            Contacts.Add(contact);
+        }
     }
 
     private bool CanEdit()
@@ -228,19 +233,19 @@ public class ContactsViewModel : ObservableObject
             return;
         }
 
-            SelectedContact.ImagePath = filePath;
+        SelectedContact.ImagePath = filePath;
 
-            using ContactDbContext db = _dbContext.CreateDbContext();
-            Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
+        using ContactDbContext db = _dbContext.CreateDbContext();
+        Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
         if (person is not null)
-            {
-                person.ImagePath = SelectedContact.ImagePath;
-                db.SaveChanges();
-            }
-
-            OnPropertyChanged(nameof(SelectedContact));
+        {
+            person.ImagePath = SelectedContact.ImagePath;
+            db.SaveChanges();
         }
+
+        OnPropertyChanged(nameof(SelectedContact));
+    }
 
     private void FavoriteContact()
     {
