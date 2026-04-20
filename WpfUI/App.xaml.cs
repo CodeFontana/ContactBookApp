@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using DataAccessLibrary;
@@ -12,20 +13,24 @@ namespace WpfUI;
 
 public partial class App : Application
 {
+    private const string AppTitle = "Contact Book";
+
     private IHost? _appHost;
 
     public App()
     {
         try
         {
+            string connectionString = $@"Data Source={Environment.CurrentDirectory}\Contacts.db;";
+
             _appHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddDbContext<ContactDbContext>(options =>
                     {
-                        options.UseSqlite($@"Data Source={Environment.CurrentDirectory}\Contacts.db;");
+                        options.UseSqlite(connectionString);
                     });
-                    services.AddTransient(sp => new ContactDbContextFactory($@"Data Source={Environment.CurrentDirectory}\Contacts.db;"));
+                    services.AddTransient(sp => new ContactDbContextFactory(connectionString));
                     services.AddTransient<IDialogService, WindowDialogService>();
                     services.AddTransient<MainViewModel>();
                     services.AddSingleton(sp => new MainWindow(sp.GetRequiredService<MainViewModel>()));
@@ -34,35 +39,41 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            string type = ex.GetType().Name;
-            if (type.Equals("StopTheHostException", StringComparison.Ordinal))
-            {
-                throw;
-            }
-
+            ShowFatalError("The application failed to initialize.", ex);
             Current.Shutdown();
         }
     }
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        if (_appHost is not null)
+        if (_appHost is null)
+        {
+            return;
+        }
+
+        try
         {
             await _appHost.StartAsync();
 
             using IServiceScope scope = _appHost.Services.CreateScope();
-            ContactDbContextFactory dbContext = scope.ServiceProvider.GetRequiredService<ContactDbContextFactory>();
-            using ContactDbContext db = dbContext.CreateDbContext();
-            db.Database.Migrate();
+            ContactDbContextFactory dbContextFactory = scope.ServiceProvider.GetRequiredService<ContactDbContextFactory>();
+            using ContactDbContext db = dbContextFactory.CreateDbContext();
+            await db.Database.MigrateAsync();
 
-            EventManager.RegisterClassHandler(typeof(TextBox),
-                                              TextBox.GotKeyboardFocusEvent,
-                                              new RoutedEventHandler(SelectAllText));
+            EventManager.RegisterClassHandler(
+                typeof(TextBox),
+                TextBox.GotKeyboardFocusEvent,
+                new RoutedEventHandler(SelectAllText));
 
             Window mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             mainWindow.Show();
             base.OnStartup(e);
+        }
+        catch (Exception ex)
+        {
+            ShowFatalError("The application failed to start.", ex);
+            Current.Shutdown();
         }
     }
 
@@ -82,7 +93,7 @@ public partial class App : Application
     {
         try
         {
-            if (_appHost != null)
+            if (_appHost is not null)
             {
                 await _appHost.StopAsync();
                 _appHost.Dispose();
@@ -90,11 +101,22 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // WPF apps don't have a console, so Console.WriteLine goes nowhere.
+            // Debug.WriteLine surfaces in the IDE Output window during a debugger session.
+            Debug.WriteLine($"Error during application shutdown: {ex}");
         }
         finally
         {
             base.OnExit(e);
         }
+    }
+
+    private static void ShowFatalError(string headline, Exception ex)
+    {
+        MessageBox.Show(
+            $"{headline}\n\n{ex.GetType().Name}: {ex.Message}\n\n{ex}",
+            $"{AppTitle} - Startup Error",
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
     }
 }
