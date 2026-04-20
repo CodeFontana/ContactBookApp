@@ -6,17 +6,11 @@ namespace WpfUI.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
-    public MainViewModel()
-    {
-        // For design mode
-    }
-
     public MainViewModel(ContactDbContextFactory dbContext,
                          IDialogService dialogService)
     {
         BookVM = new BookViewModel(dbContext, dialogService);
         CurrentViewModel = BookVM;
-
     }
 
     private object? _currentViewModel;

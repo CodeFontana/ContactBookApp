@@ -1,13 +1,13 @@
-﻿using WpfUI.ViewModels;
-using System.Windows;
+﻿using System.Windows;
+using WpfUI.ViewModels;
 
 namespace WpfUI;
 
 public partial class MainWindow : Window
 {
-    public MainWindow(object dataContext)
+    public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();
-        DataContext = dataContext;
+        DataContext = viewModel;
     }
 }
