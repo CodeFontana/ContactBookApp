@@ -23,12 +23,12 @@ public class ContactsViewModel : ObservableObject
         _dialogService = dialogService;
         CreateContactCommand = new RelayCommand(CreateContact);
         EditContactCommand = new RelayCommand(EditContact, CanEdit);
-        AddPhoneNumber = new RelayCommand(AddContactPhone, IsEdit);
-        AddEmailAddress = new RelayCommand(AddContactEmail, IsEdit);
-        AddPhysicalAddress = new RelayCommand(AddContactAddress, IsEdit);
-        RemovePhoneNumber = new RelayCommand<int>(RemoveContactPhone);
-        RemoveEmailAddress = new RelayCommand<int>(RemoveContactEmail);
-        RemovePhysicalAddress = new RelayCommand<int>(RemoveContactAddress);
+        AddPhoneNumberCommand = new RelayCommand(AddContactPhone, IsEdit);
+        AddEmailAddressCommand = new RelayCommand(AddContactEmail, IsEdit);
+        AddPhysicalAddressCommand = new RelayCommand(AddContactAddress, IsEdit);
+        RemovePhoneNumberCommand = new RelayCommand<int>(RemoveContactPhone);
+        RemoveEmailAddressCommand = new RelayCommand<int>(RemoveContactEmail);
+        RemovePhysicalAddressCommand = new RelayCommand<int>(RemoveContactAddress);
         UpdateContactCommand = new RelayCommand(UpdateContact, IsEdit);
         UpdateContactImageCommand = new RelayCommand(UpdateContactImage, IsEdit);
         FavoriteContactCommand = new RelayCommand(FavoriteContact);
@@ -71,12 +71,12 @@ public class ContactsViewModel : ObservableObject
     }
 
     public ICommand EditContactCommand { get; private set; }
-    public ICommand AddPhoneNumber { get; private set; }
-    public ICommand AddEmailAddress { get; private set; }
-    public ICommand AddPhysicalAddress { get; private set; }
-    public ICommand RemovePhoneNumber { get; private set; }
-    public ICommand RemoveEmailAddress { get; private set; }
-    public ICommand RemovePhysicalAddress { get; private set; }
+    public ICommand AddPhoneNumberCommand { get; private set; }
+    public ICommand AddEmailAddressCommand { get; private set; }
+    public ICommand AddPhysicalAddressCommand { get; private set; }
+    public ICommand RemovePhoneNumberCommand { get; private set; }
+    public ICommand RemoveEmailAddressCommand { get; private set; }
+    public ICommand RemovePhysicalAddressCommand { get; private set; }
     public ICommand UpdateContactCommand { get; private set; }
     public ICommand FavoriteContactCommand { get; private set; }
     public ICommand UpdateContactImageCommand { get; private set; }

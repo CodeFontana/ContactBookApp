@@ -106,7 +106,7 @@
                            Foreground="#FFF5F7F9"
                            Content="Phone Numbers"
                            FontSize="16"/>
-                    <Button Command="{Binding AddPhoneNumber}"
+                    <Button Command="{Binding AddPhoneNumberCommand}"
                             Margin="10 0 10 0"
                             Height="20"
                             Width="20"
@@ -143,7 +143,7 @@
                                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
                                                               HorizontalContentAlignment="Stretch"/>
                                         <Button Grid.Column="1"
-                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhoneNumber}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhoneNumberCommand}"
                                                 CommandParameter="{Binding Id}"
                                                 Margin="10 0 10 0"
                                                 Height="20"
@@ -173,7 +173,7 @@
                            Foreground="#FFF5F7F9"
                            Content="Email Addresses"
                            FontSize="16"/>
-                    <Button Command="{Binding AddEmailAddress}"
+                    <Button Command="{Binding AddEmailAddressCommand}"
                             Margin="10 0 10 0"
                             Height="20"
                             Width="20"
@@ -207,7 +207,7 @@
                                                       FontSize="14"
                                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 <Button Grid.Column="1"
-                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemoveEmailAddress}"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemoveEmailAddressCommand}"
                                         CommandParameter="{Binding Id}"
                                         Margin="10 0 10 0"
                                         Height="20"
@@ -235,7 +235,7 @@
                                Foreground="#FFF5F7F9"
                                Content="Physical Addresses"
                                FontSize="16"/>
-                        <Button Command="{Binding AddPhysicalAddress}"
+                        <Button Command="{Binding AddPhysicalAddressCommand}"
                                 Margin="10 0 10 0"
                                 Height="20"
                                 Width="20"
@@ -276,7 +276,7 @@
                                         <c:TextboxWithPreview Grid.Column="3" Margin="0 0 5 0" Text="{Binding ZipCode}" TextPreview="Zip code" FontSize="14" />
                                     </Grid>
                                     <Button Grid.Column="1"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhysicalAddress}"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DetailsView}}, Path=DataContext.RemovePhysicalAddressCommand}"
                                             CommandParameter="{Binding Id}"
                                             Margin="10 0 10 0"
                                             Height="20"
