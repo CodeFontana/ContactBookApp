@@ -148,9 +148,9 @@ public class ContactsViewModel : ObservableObject
             {
                 person.FirstName = SelectedContact.FirstName;
                 person.LastName = SelectedContact.LastName;
-                person.Addresses = new ObservableCollection<Address>(SelectedContact.Addresses.ToList().Select(x => AddressModel.ToAddressMap(x)));
-                person.PhoneNumbers = new ObservableCollection<Phone>(SelectedContact.PhoneNumbers.ToList().Select(x => PhoneModel.ToPhoneMap(x)));
-                person.EmailAddresses = new ObservableCollection<Email>(SelectedContact.EmailAddresses.ToList().Select(x => EmailModel.ToEmailMap(x)));
+                person.Addresses = SelectedContact.Addresses.Select(AddressModel.ToAddressMap).ToList();
+                person.PhoneNumbers = SelectedContact.PhoneNumbers.Select(PhoneModel.ToPhoneMap).ToList();
+                person.EmailAddresses = SelectedContact.EmailAddresses.Select(EmailModel.ToEmailMap).ToList();
                 person.ImagePath = SelectedContact.ImagePath;
                 person.IsFavorite = SelectedContact.IsFavorite;
                 db.SaveChanges();

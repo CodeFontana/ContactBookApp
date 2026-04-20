@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccessLibrary.Entities;
@@ -20,11 +19,11 @@ public class Person
     [NotMapped]
     public string FullName { get => $"{FirstName} {LastName}"; }
 
-    public ObservableCollection<Address> Addresses { get; set; } = new();
+    public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
-    public ObservableCollection<Phone> PhoneNumbers { get; set; } = new();
+    public ICollection<Phone> PhoneNumbers { get; set; } = new List<Phone>();
 
-    public ObservableCollection<Email> EmailAddresses { get; set; } = new();
+    public ICollection<Email> EmailAddresses { get; set; } = new List<Email>();
 
     public string? ImagePath { get; set; }
 
