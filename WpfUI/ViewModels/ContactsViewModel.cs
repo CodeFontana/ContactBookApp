@@ -204,15 +204,36 @@ public class ContactsViewModel : ObservableObject
 
     private void UpdateContactImage()
     {
-        if (SelectedContact is not null)
+        if (SelectedContact is null)
         {
-            string? filePath = _dialogService.OpenFile("Image files|*.bmp;*.jpg;*.jpeg;*.png;|All files");
+            return;
+        }
+
+        string? filePath = _dialogService.OpenFile(
+            "Image files (*.bmp;*.jpg;*.jpeg;*.png;*.heic;*.heif)|*.bmp;*.jpg;*.jpeg;*.png;*.heic;*.heif|All files (*.*)|*.*");
+
+        if (filePath is null)
+        {
+            return;
+        }
+
+        // HEIC/HEIF requires the Microsoft HEIF Image Extensions (and HEVC Video Extensions for the
+        // actual H.265 decode). If those aren't installed, or the file is corrupt, TryLoad returns null.
+        if (ImagePathToBitmapSourceConverter.TryLoad(filePath) is null)
+        {
+            _dialogService.ShowMessageBox(
+                $"The selected image could not be loaded:\n\n{filePath}\n\n" +
+                "If this is a HEIC or HEIF file, install the \"HEIF Image Extensions\" " +
+                "(and \"HEVC Video Extensions\") from the Microsoft Store and try again.");
+            return;
+        }
+
             SelectedContact.ImagePath = filePath;
 
             using ContactDbContext db = _dbContext.CreateDbContext();
             Person? person = db.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id);
 
-            if (person != null)
+        if (person is not null)
             {
                 person.ImagePath = SelectedContact.ImagePath;
                 db.SaveChanges();
@@ -220,7 +241,6 @@ public class ContactsViewModel : ObservableObject
 
             OnPropertyChanged(nameof(SelectedContact));
         }
-    }
 
     private void FavoriteContact()
     {

@@ -10,28 +10,52 @@ namespace WpfUI.Helpers;
 public sealed class ImagePathToBitmapSourceConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        string? path = value as string;
-
-        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
-            return null;
-
-        using FileStream stream = File.OpenRead(path);
-
-        BitmapDecoder decoder = BitmapDecoder.Create(
-            stream,
-            BitmapCreateOptions.PreservePixelFormat,
-            BitmapCacheOption.OnLoad);
-
-        BitmapFrame frame = decoder.Frames[0];
-        BitmapSource oriented = ApplyExifOrientationFromFrame(frame);
-
-        oriented.Freeze();
-        return oriented;
-    }
+        => TryLoad(value as string);
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => Binding.DoNothing;
+
+    /// <summary>
+    /// Loads the image at <paramref name="path"/> as a frozen <see cref="BitmapSource"/>.
+    /// Returns <c>null</c> for missing files, blank paths, or any decode failure (e.g. unsupported
+    /// format, missing codec such as HEIF Image Extensions, corrupt file, file currently in use).
+    /// Defensive by design so a broken file never crashes a binding.
+    /// </summary>
+    public static BitmapSource? TryLoad(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return null;
+        }
+
+        try
+        {
+            using FileStream stream = File.OpenRead(path);
+
+            BitmapDecoder decoder = BitmapDecoder.Create(
+                stream,
+                BitmapCreateOptions.PreservePixelFormat,
+                BitmapCacheOption.OnLoad);
+
+            BitmapFrame frame = decoder.Frames[0];
+            BitmapSource oriented = ApplyExifOrientationFromFrame(frame);
+
+            oriented.Freeze();
+            return oriented;
+        }
+        catch (NotSupportedException)
+        {
+            return null;
+        }
+        catch (FileFormatException)
+        {
+            return null;
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+    }
 
     private static BitmapSource ApplyExifOrientationFromFrame(BitmapFrame frame)
     {
